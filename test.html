@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>test</title>
+    </head>
+
+    <body> 
+        <button onclick="myFunc()"> Click me </button>
+        
+        <script> 
+            function myFunc() {
+                let data = {"content": "undefinedpork, carrots, celery"};
+				   
+                   fetch('http://127.0.0.1/get_foods', {
+                       method: "POST",
+                       headers: {'Content-Type': 'application/json'}, 
+                       body: JSON.stringify(data)
+                   })
+                       .then((response) => {
+                           return response.json();
+                       })
+                       .then((myJson) => {
+                           console.log(myJson.result);
+                       });
+            }
+        </script>
+    </body>
+</html>
