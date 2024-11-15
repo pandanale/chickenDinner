@@ -1,9 +1,92 @@
-import openai
-import base64
+from openai import OpenAI
+import sqlite3
+import os
+import re
 import requests
 
 # Set your OpenAI API key
-openai.api_key = "api_key"
+client = OpenAI(
+    api_key=""
+)
+
+# File to store authorized emails
+AUTH_EMAILS_FILE = "authorized_emails.txt"
+
+# Load authorized emails from a file
+def load_authorized_emails():
+    if os.path.exists(AUTH_EMAILS_FILE):
+        with open(AUTH_EMAILS_FILE, 'r') as f:
+            return [line.strip() for line in f.readlines()]
+    else:
+        return []
+
+# Save a new authorized email to the file
+def save_authorized_email(email):
+    with open(AUTH_EMAILS_FILE, 'a') as f:
+        f.write(email + '\n')
+
+# Function to authenticate the user by email
+def authenticate_user():
+    authorized_emails = load_authorized_emails()
+    email = input("Please enter your email to access the Recipe Chatbot: ").strip()
+    
+    if email in authorized_emails:
+        print("Authentication successful. Welcome!")
+        return email
+    else:
+        print("This email is not registered.")
+        create_account = input("Would you like to create an account? (yes/no): ").lower()
+        if create_account == "yes":
+            save_authorized_email(email)
+            print("Account created and email authorized. Welcome!")
+            return email
+        else:
+            print("Access denied.")
+            return None
+
+# Function to create a unique database file path based on user email
+def get_database_path(email):
+    # Convert email to a safe filename
+    safe_email = re.sub(r'[^a-zA-Z0-9]', '_', email)  # Replace non-alphanumeric characters with underscores
+    return f"user_recipes/{safe_email}_recipes.db"
+
+# Initialize and connect to the user's personalized SQLite database
+def initialize_user_database(email):
+    db_path = get_database_path(email)
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS recipes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ingredients TEXT,
+            cuisine_type TEXT,
+            recipe TEXT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    conn.commit()
+    return conn
+
+# Save a recipe to the database if it doesn't already exist
+def save_recipe_to_db(conn, ingredients, cuisine_type, recipe):
+    cursor = conn.cursor()
+    
+    # Check if the recipe already exists
+    cursor.execute('''
+        SELECT id FROM recipes WHERE ingredients = ? AND cuisine_type = ? AND recipe = ?
+    ''', (', '.join(ingredients), cuisine_type, recipe))
+    existing_recipe = cursor.fetchone()
+
+    if existing_recipe:
+        print("This recipe already exists in the database.")
+    else:
+        # Save the new recipe
+        cursor.execute('''
+            INSERT INTO recipes (ingredients, cuisine_type, recipe)
+            VALUES (?, ?, ?)
+        ''', (', '.join(ingredients), cuisine_type, recipe))
+        conn.commit()
+        print("Recipe saved to the database.")
 
 # Few-shot examples
 few_shot_examples = [
@@ -17,7 +100,7 @@ few_shot_examples = [
     {
         "role": "assistant",
         "content": """
-        Here's a recipe you can mak e:
+        Here's a recipe you can make:
         **Grilled Chicken with Broccoli and Rice**
         - Ingredients:
           - Chicken breast
@@ -46,48 +129,48 @@ def get_recipe_suggestions(ingredients, cuisine_type):
         *few_shot_examples,
         {"role": "user", "content": user_prompt}
     ]
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
         messages=messages,
         temperature=0.7,
-        max_tokens=500,
+        max_tokens=300,
     )
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
 
-# Function to generate an image with DALL-E
+# Function to generate an image of the recipe
 def generate_recipe_image(recipe_description):
-    # Dynamically construct a concise prompt based on the recipe
-    lines = recipe_description.split("\n")
-    dish_name = lines[1].strip("* ").strip()  # Extract the dish name
-    ingredients = ", ".join([line.strip("- ").strip() for line in lines if line.startswith("  - ")])  # Extract ingredients
+    # Find the first line that starts with ###
+    lines = recipe_description.split('\n')
+    line_of_interest = next((line for line in lines if line.startswith('###')), None)
 
-    # Construct a concise, dynamic image prompt
-    detailed_prompt = f"""
-    A semi-realistic photograph of a {dish_name}."
-    """
-    detailed_prompt = detailed_prompt.strip()[:1000]  # Ensure the prompt is under 1000 characters
-
-    # Use OpenAI's DALL-E API to generate an image
-    response = openai.Image.create(
-        prompt=detailed_prompt,
-        n=1,
-        size="1024x1024"
-    )
-    
-    # Extract the URL of the generated image
-    image_url = response['data'][0]['url']
-    
-    # Download the image and save it locally
-    image_response = requests.get(image_url)
-    if image_response.status_code == 200:
+    prompt = f"Photorealistic image of a dish: {line_of_interest}. Present it in a modern, well-lit setting."
+    try:
+        response = client.images.generate(
+            model="dall-e-3",
+            prompt=prompt,
+            size="1024x1024",
+            quality="standard",
+            n=1,
+        )
+        image_url = response.data[0].url
+        
+        # Download and save the image locally
+        image_data = requests.get(image_url).content
         with open("recipe_image.png", "wb") as f:
-            f.write(image_response.content)
-        return "recipe_image.png"
-    else:
-        raise Exception(f"Failed to download the image. Status code: {image_response.status_code}")
+            f.write(image_data)
+        print("Image generated and saved as recipe_image.png.")
+    except Exception as e:
+        print(f"Error generating image: {e}")
 
 # Main function for the chatbot
 def recipe_chatbot():
+    # Authenticate the user
+    email = authenticate_user()
+    if not email:
+        return  # Exit if authentication fails
+
+    # Initialize the personalized database connection for the user
+    conn = initialize_user_database(email)
     print("Welcome to the Recipe Chatbot! 🎉")
     print("Tell me what ingredients you have and what type of dish you'd like to make.")
     
@@ -102,18 +185,24 @@ def recipe_chatbot():
         print("Here’s what I came up with:")
         print(suggestions)
 
-        # Ask if the user wants an image of the recipe
-        image_request = input("\nWould you like an image of this recipe? (yes/no): ").lower()
-        if image_request == "yes":
-            print("Generating an image of the recipe...")
-            recipe_image_path = generate_recipe_image(suggestions)
-            print(f"Image saved to: {recipe_image_path}")
+        # Ask if the user wants to save the recipe to the database
+        save_to_db = input("\nWould you like to save this recipe to the database? (yes/no): ").lower()
+        if save_to_db == "yes":
+            save_recipe_to_db(conn, ingredients, cuisine_type, suggestions)
+
+        # Ask if the user wants to generate an image
+        generate_image = input("\nWould you like to generate an image of this recipe? (yes/no): ").lower()
+        if generate_image == "yes":
+            generate_recipe_image(suggestions)
 
         # Ask if the user wants another recipe
         another = input("\nWould you like another recipe suggestion? (yes/no): ").lower()
         if another != "yes":
             print("Thanks for using the Recipe Chatbot! Happy cooking! 👩‍🍳🍳")
             break
+
+    # Close the database connection
+    conn.close()
 
 # Run the chatbot
 if __name__ == "__main__":

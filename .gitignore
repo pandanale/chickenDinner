@@ -1,0 +1,6 @@
+.DS_Store
+.env
+venv
+authorized_emails.txt
+recipe_img.png
+user_recipes/*
