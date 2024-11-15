@@ -15,7 +15,7 @@ Stop - Cancels request and clears context <br/>
 Clear Context - clears context and starts a new conversation. <br/>
 
 
-# UI plan
+# UI plan (Flask application with React on the front end)
 
 Winner Winner Chicken Dinner Kitchen Helper ChatBot
 
@@ -24,4 +24,6 @@ Winner Winner Chicken Dinner Kitchen Helper ChatBot
   2. Saved recipes tab
   3. Recipes generated -> button for "let's see what this looks like!"
      -> use dall-E to generate an image but ONLY when user requests it (saves computation time and energy)
+
+
      
