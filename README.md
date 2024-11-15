@@ -1,4 +1,6 @@
-# LocalLLMChat
+#### chickenDinner
+
+# LocalLLMChat (uploaded n copied lol @ aaron)
 Single HTML Page access to an OpenAI API compatible Local LLM
 ![local_chat](https://github.com/dmeldrum6/LocalLLMChat/assets/38048135/9b8d2ca2-afe7-4fbf-9e30-0f65ca7665d1)
 
@@ -11,3 +13,15 @@ It implements streaming replies from the API so you don't need to wait for the e
 Generate - Passes prompt to the API endpoint and begins displaying response. <br/>
 Stop - Cancels request and clears context <br/>
 Clear Context - clears context and starts a new conversation. <br/>
+
+
+# UI plan
+
+Winner Winner Chicken Dinner Kitchen Helper ChatBot
+
+- User Interface -
+  1. Standard chatbot input, with clear instructions 
+  2. Saved recipes tab
+  3. Recipes generated -> button for "let's see what this looks like!"
+     -> use dall-E to generate an image but ONLY when user requests it (saves computation time and energy)
+     
