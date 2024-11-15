@@ -17,7 +17,7 @@ few_shot_examples = [
     {
         "role": "assistant",
         "content": """
-        Here's a recipe you can make:
+        Here's a recipe you can mak e:
         **Grilled Chicken with Broccoli and Rice**
         - Ingredients:
           - Chicken breast
