@@ -1,0 +1,16 @@
+{
+    "name": "chicken-dinner-app",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Full-stack recipe chatbot application using Flask and React",
+    "scripts": {
+      "start": "npm run start:frontend",
+      "start:frontend": "cd frontend && npm start",
+      "start:backend": "cd backend && flask run",
+      "install": "npm run install:frontend && npm run install:backend",
+      "install:frontend": "cd frontend && npm install",
+      "install:backend": "cd backend && pip install -r requirements.txt"
+    },
+    "author": "Alexandra",
+    "license": "MIT"
+  }  

@@ -1,0 +1,17 @@
+# Core Flask dependencies
+Flask==2.2.3              # Web framework
+Flask-Cors==3.0.10        # Handle Cross-Origin Resource Sharing (CORS)
+
+# Database (SQLite support included with SQLAlchemy)
+SQLAlchemy==1.4.46        # ORM for working with SQLite
+Flask-SQLAlchemy==2.5.1   # SQLAlchemy integration with Flask
+
+# OpenAI integration
+openai==0.27.6            # OpenAI API client
+
+# Additional utilities
+python-dotenv==1.0.0      # For managing environment variables
+
+# Testing (optional, for backend tests)
+pytest==7.4.0             # Testing framework
+pytest-flask==1.2.0       # Testing support for Flask apps
