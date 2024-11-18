@@ -6,6 +6,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>LLM Access</title>
 		<script>
+			if (sessionStorage.getItem('authenticated') !== 'true') {
+				alert('Please log in to access this page.');
+				window.location.href = 'login.html';
+			}
+		
 			// Constant URL for API endpoint
 			const API_URL = "https://api.openai.com/v1/chat/completions";
 			// Constant for API key
