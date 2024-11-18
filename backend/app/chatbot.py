@@ -68,26 +68,26 @@ def initialize_user_database(email):
     conn.commit()
     return conn
 
-# Save a recipe to the database if it doesn't already exist
-def save_recipe_to_db(conn, title, ingredients, cuisine_type, recipe):
+def initialize_user_database(email):
+    db_path = get_database_path(email)
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    
-    # Check if the recipe already exists
     cursor.execute('''
-        SELECT id FROM recipes WHERE ingredients = ? AND cuisine_type = ? AND recipe = ?
-    ''', (', '.join(ingredients), cuisine_type, recipe))
-    existing_recipe = cursor.fetchone()
+        CREATE TABLE IF NOT EXISTS recipes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT,
+            ingredients TEXT,
+            cuisine_type TEXT,
+            recipe TEXT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    conn.commit()
+    return conn
 
-    if existing_recipe:
-        print("This recipe already exists in the database.")
-    else:
-        # Save the new recipe
-        cursor.execute('''
-            INSERT INTO recipes (title, ingredients, cuisine_type, recipe)
-            VALUES (?, ?, ?, ?)
-        ''', (title, ', '.join(ingredients), cuisine_type, recipe))
-        conn.commit()
-        print("Recipe saved to the database.")
+
 
 # Few-shot examples
 few_shot_examples = [
@@ -102,7 +102,7 @@ few_shot_examples = [
         "role": "assistant",
         "content": """
         Here's a recipe you can make:
-        ### Grilled Chicken with Broccoli and Rice
+        Grilled Chicken with Broccoli and Rice
         - Ingredients:
           - Chicken breast
           - Cooked rice
@@ -130,13 +130,28 @@ def get_recipe_suggestions(ingredients, cuisine_type):
         *few_shot_examples,
         {"role": "user", "content": user_prompt}
     ]
+    
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=messages,
         temperature=0.7,
         max_tokens=300,
     )
-    return response.choices[0].message.content
+    
+    # Extract the content
+    recipe_text = response.choices[0].message.content
+    
+    # Parse the recipe text to extract structured data
+    title = get_title(recipe_text)
+    ingredients_list = recipe_text.split("Ingredients:")[1].split("Instructions:")[0].strip().split('\n')
+    instructions = recipe_text.split("Instructions:")[1].strip()
+    
+    return {
+        "title": title,
+        "ingredients": ingredients_list,
+        "instructions": instructions
+    }
+
 
 def get_title(recipe_description):
     # Find the first line that starts with ###
@@ -145,9 +160,10 @@ def get_title(recipe_description):
     return title
 
 
+
 # Function to generate an image of the recipe
 def generate_recipe_image(title):
-    prompt = f"Photorealistic image of a dish: {title}. Present it in a modern, well-lit setting."
+    prompt = f"Realistic image of a dish: {title}. Present it in a modern, well lit setting"
     try:
         response = client.images.generate(
             model="dall-e-3",
@@ -188,6 +204,45 @@ def display_recipe_db(conn):
     recipe = cursor.fetchone()
     print(recipe[0])
 
+def handle_recipe_questions(recipe, question):
+    # Check if the recipe is a dictionary or a string
+    if isinstance(recipe, str):
+        # Use the string directly
+        recipe_text = recipe
+    else:
+        # Convert dictionary to formatted string
+        recipe_text = f"""
+        Recipe Title: {recipe.get('title', 'N/A')}
+        Ingredients: {', '.join(recipe.get('ingredients', []))}
+        Instructions: {recipe.get('instructions', 'N/A')}
+        """
+    
+    prompt = f"""
+    You are a helpful recipe assistant. Here is the recipe:
+
+    {recipe_text}
+    
+    User Question: {question}
+    
+    Provide a helpful response based on the recipe above.
+    """
+    
+    try:
+        # Call the OpenAI API to generate a response
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "system", "content": "You are a helpful cooking assistant."},
+                      {"role": "user", "content": prompt}],
+            max_tokens=150,
+            temperature=0.7,
+        )
+        
+        # Extract and return the answer
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        return "I'm having trouble answering your question right now. Please try again later."
+
+
 def start():
     # Authenticate the user
     email = authenticate_user()
@@ -203,10 +258,9 @@ def start():
     elif create_or_browse == "browse":
         display_recipe_db(conn)
 
-# Main function for the chatbot
 def recipe_chatbot(conn):
     print("Tell me what ingredients you have and what type of dish you'd like to make.")
-    
+
     while True:
         ingredients_input = input("Enter your ingredients (comma-separated): ")
         cuisine_type = input("Enter the type of cuisine or dish (e.g., Italian, dessert, etc.): ")
@@ -216,18 +270,31 @@ def recipe_chatbot(conn):
         suggestions = get_recipe_suggestions(ingredients, cuisine_type)
 
         print("Here’s what I came up with:")
-        print(suggestions)
-        title = get_title(suggestions)
+        print(f"Title: {suggestions['title']}")
+        print(f"Ingredients: {', '.join(suggestions['ingredients'])}")
+        print(f"Instructions: {suggestions['instructions']}")
 
-        # Ask if the user wants to save the recipe to the database
+        title = suggestions['title']
+
+        # Save recipe option
         save_to_db = input("\nWould you like to save this recipe to the database? (yes/no): ").lower()
         if save_to_db == "yes":
             save_recipe_to_db(conn, title, ingredients, cuisine_type, suggestions)
 
-        # Ask if the user wants to generate an image
+        # Generate image option
         generate_image = input("\nWould you like to generate an image of this recipe? (yes/no): ").lower()
         if generate_image == "yes":
             generate_recipe_image(title)
+
+        # Open-ended Q&A session using OpenAI API
+        while True:
+            question = input("\nYou can ask me questions about the recipe (e.g., substitutions, steps, etc.) or type 'done' to exit: ").lower().strip()
+
+            if question == "done":
+                break
+            else:
+                response = handle_recipe_questions(suggestions, question)
+                print(response)
 
         # Ask if the user wants another recipe
         another = input("\nWould you like another recipe suggestion? (yes/no): ").lower()

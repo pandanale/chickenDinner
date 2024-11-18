@@ -1,0 +1,99 @@
+/* General Reset */
+body,
+h1,
+h2,
+form,
+label,
+input,
+button,
+p {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Style */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+nav .button {
+    display: inline-block;
+    margin: 10px;
+    padding: 15px 30px;
+    background-color: #007bff;
+    /* Blue background */
+    color: white;
+    /* White text */
+    text-decoration: none;
+    /* Remove underline */
+    border: none;
+    /* Remove border */
+    border-radius: 10px;
+    /* Soft square shape */
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    /* Smooth hover effect */
+}
+
+/* Form Container */
+form {
+    background-color: #fff;
+    padding: 20px 40px;
+    border-radius: 10px;
+    /* Soft square for the form box */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    /* Centered size */
+}
+
+/* Input Fields */
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+    text-align: left;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    /* Spacing between fields */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    /* Soft square shape */
+    font-size: 1rem;
+}
+
+/* Register Button */
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    /* Blue button */
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    /* Soft square shape */
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    /* Smooth hover */
+}
+
+form button:hover {
+    background-color: #0056b3;
+    /* Darker blue on hover */
+}
+
