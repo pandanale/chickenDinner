@@ -98,3 +98,7 @@ form button:hover {
     /* Darker blue on hover */
 }
 
+
+#greeting {
+    color: white;
+}

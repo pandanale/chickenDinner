@@ -23,7 +23,10 @@
     <!-- Display saved recipes -->
     <div id="recipes">
       {% if recipes|length == 0 %}
-          <p>You don't have any saved recipes <button id="chatbotButton" onclick="window.location.href='/chatbot'">Let's make one!</button></p>
+      <div class="no-recipes">
+        <h2>You have no saved recipes</h2>
+        <button id="chatbotButton" onclick="window.location.href='/chatbot'">Let's make one!</button>
+    </div>
       {% else %}
           {% for recipe in recipes %}
           <div class="recipe-card" data-title="{{ recipe[0] }}">

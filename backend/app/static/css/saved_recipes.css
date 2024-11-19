@@ -38,6 +38,10 @@ nav {
     align-items: center;
 }
 
+#greeting {
+    color: white;
+}
+
 /* Navigation buttons styling */
 nav button {
     color: white;
@@ -56,17 +60,18 @@ nav button:hover {
 }
 
 /* Ensure content starts below the navbar */
-main {
-    margin-top: 60px; /* Adjust based on the nav height */
+body {
+    margin-top: 80px; /* Adjust based on the nav height */
 }
 
 
 /* Heading styling */
 h1 {
+    text-align: center;
+    font-size: 2rem;
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
-
 /* Ensure buttons are inline and centered */
 .buttons-wrapper {
     display: flex; /* Align items inline */
@@ -74,18 +79,6 @@ h1 {
     align-items: center; /* Center vertically */
     gap: 20px; /* Add space between buttons */
     margin-top: 20px; /* Spacing from the top */
-}
-
-/* Buttons with tooltips */
-.tooltip-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    position: relative;
-    display: flex; /* Ensure the icon and tooltip align */
-    justify-content: center;
-    align-items: center;
 }
 
 /* Icon Styling */
@@ -100,29 +93,39 @@ h1 {
     color: #003d80; /* Change color on hover */
 }
 
+.tooltip-button {
+    position: relative; /* Enable positioning for tooltips */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .tooltip-button::after {
-    content: attr(data-tooltip); /* Display tooltip text */
+    content: attr(data-tooltip); /* Fetch tooltip text */
     position: absolute;
-    bottom: -35px; /* Position tooltip below button */
+    bottom: -40px; /* Position below the icon */
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.85); /* Slightly darker background for better contrast */
-    color: #fff; /* White text */
-    padding: 6px 12px; /* Adjust padding for better spacing */
-    border-radius: 8px; /* Smooth border */
-    font-size: 14px; /* Adjust font size */
-    white-space: nowrap; /* Prevent wrapping */
-    opacity: 0; /* Hidden by default */
-    pointer-events: none; /* Prevent mouse interaction */
-    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth fade-in and lift effect */
-    z-index: 10;
-  }
-  
-  .tooltip-button:hover::after {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0; /* Start hidden */
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 10; /* Ensure it appears above other elements */
+}
+
+.tooltip-button:hover::after {
     opacity: 1; /* Show tooltip on hover */
-    transform: translateX(-50%) translateY(-5px); /* Slight lift effect */
-  }
-  
+    transform: translateX(-50%) translateY(-5px); /* Slight lift */
+}
+
 
 /* Buttons container */
 .buttons-container {
@@ -217,6 +220,42 @@ button:hover {
 .recipe-card p {
     margin-top: 10px;
     line-height: 1.5;
+}
+
+/* Center "no recipes" message closer to the top */
+.no-recipes {
+    display: flex;
+    flex-direction: column; /* Stack the text and button */
+    align-items: center; /* Center horizontally */
+    justify-content: flex-start; /* Align closer to the top */
+    height: calc(100vh - 80px); /* Full height minus navbar */
+    text-align: center;
+    color: #333;
+    margin-top: 150px; /* Adjust this value to move it slightly down */
+    gap: 20px; /* Add space between the heading and button */
+}
+
+
+/* Style for the "no recipes" message */
+.no-recipes h2 {
+    margin-bottom: 20px;
+    color: #444; /* Make it visually distinct */
+}
+
+/* Style for the button */
+.no-recipes button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.no-recipes button:hover {
+    background-color: #0056b3;
 }
 
 

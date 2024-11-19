@@ -28,6 +28,9 @@ nav {
     gap: 10px;
     align-items: center;
 }
+#greeting {
+    color: white;
+}
 
 nav button {
     color: white;
