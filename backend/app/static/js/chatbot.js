@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (data.image_url) {
         displayMessage(
           "",
-          `<img src="${data.image_url}" alt="Generated Recipe Image">`
+          `<img src="${data.image_url}" alt="Generated Recipe Image" style="max-width: 100%; max-height: 100%; width: auto; height: auto; aspect-ratio: 1 / 1;">`
         );
       }
     }
