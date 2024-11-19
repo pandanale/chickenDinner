@@ -159,7 +159,7 @@ button:hover {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
-}
+}/* Recipe card styling */
 .recipe-card {
     background-color: #e0f7fa;
     border: 1px solid #b2ebf2;
@@ -167,6 +167,7 @@ button:hover {
     padding: 20px;
     width: 300px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative; /* Ensure the icon can be positioned relative to the card */
     margin: 20px auto; /* Center the recipe card */
     transition: transform 0.2s ease;
 }
@@ -175,12 +176,35 @@ button:hover {
     transform: translateY(-5px);
 }
 
-.recipe-card h2 {
-    margin-top: 0;
-    color: #00796b;
-    text-align: center; /* Center-align the title */
+/* Title and delete icon container */
+.recipe-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px; /* Add some space below the header */
 }
 
+/* Recipe title styling */
+.recipe-card h2 {
+    margin: 0; /* Remove default margin for cleaner layout */
+    color: #00796b;
+    font-size: 1.25rem; /* Adjust font size */
+}
+
+/* Delete icon styling */
+.delete-icon {
+    font-size: 1.5rem; /* Adjust size for better visibility */
+    color: #d82013; /* Red color */
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.delete-icon:hover {
+    transform: scale(1.2); /* Enlarge slightly on hover */
+    color: #b71c1c; /* Darker red for hover */
+}
+
+/* Ingredients and instructions styling */
 .recipe-card ul {
     list-style-type: none;
     padding: 0;

@@ -207,6 +207,45 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+ // Function to confirm deletion
+function confirmDelete(recipeTitle) {
+  const confirmed = confirm(`Are you sure you want to delete the recipe "${recipeTitle}"?`);
+  if (confirmed) {
+      deleteRecipe(recipeTitle);
+  }
+}
+
+// Function to send a delete request and update the screen
+async function deleteRecipe(recipeTitle) {
+  try {
+      const response = await fetch('/delete-recipe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: recipeTitle })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+          alert(`Recipe "${recipeTitle}" deleted successfully.`);
+          // Remove the recipe card from the DOM
+          const recipeCard = document.querySelector(`.recipe-card[data-title="${recipeTitle}"]`);
+          if (recipeCard) {
+              recipeCard.remove();
+          }
+
+          // Reload the page to ensure consistency
+          location.reload();
+      } else {
+          alert(`Failed to delete recipe: ${data.message}`);
+      }
+  } catch (error) {
+      console.error('Error deleting recipe:', error);
+      alert('An error occurred while deleting the recipe.');
+  }
+}
+
+
   async function saveRecipe() {
     const response = await fetch("/save-recipe", {
       method: "POST",

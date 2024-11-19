@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, session, render_template, redirect, url_for
 from flask_cors import CORS
 from chatbot import get_recipe_suggestions, handle_recipe_questions, generate_recipe_image
-from database import save_recipe_to_db, get_user_recipes
+from database import save_recipe_to_db, get_user_recipes, delete_recipe_from_db
 import os
 
 app = Flask(__name__)
@@ -179,6 +179,31 @@ def ask_question_route():
     suggestions = session.get('suggestions')
     response = handle_recipe_questions(suggestions, question)
     return jsonify({"response": response})
+
+@app.route('/delete-recipe', methods=['POST'])
+def delete_recipe():
+    try:
+        data = request.json
+        recipe_title = data.get('title')
+        username = session.get('user_email')  # Use 'user_email' for consistency
+
+        if not recipe_title or not username:
+            return jsonify({'success': False, 'message': 'Invalid request'})
+
+        # # Connect to the database and delete the recipe
+        # conn = sqlite3.connect('recipes.db')
+        # cursor = conn.cursor()
+        # cursor.execute('DELETE FROM recipes WHERE title = ? AND username = ?', (recipe_title, username))
+        # conn.commit()
+        # conn.close()
+
+        delete_recipe_from_db(username,recipe_title)
+        return jsonify({'success': True})
+    except Exception as e:
+        print('Error:', e)
+        return jsonify({'success': False, 'message': 'An error occurred'})
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
