@@ -13,8 +13,8 @@
       <button id="newChat" onclick="window.location.href='/chatbot'" >New Chat</button>
     </div>
     <div id="rightButtons">
-        <span id="greeting"> <span id="greeting"> Hello user! </span>
-        <span> | </span>
+      <span id="greeting"> You're a winner winner chicken dinner, <strong>{{session['username']}}</strong>!</span>
+      <span> | </span>
         <button id="logoutButton"  onclick="window.location.href='/login'"">Logout</button>
     </div>
   </nav>
