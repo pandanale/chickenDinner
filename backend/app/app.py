@@ -183,25 +183,34 @@ def ask_question_route():
 @app.route('/delete-recipe', methods=['POST'])
 def delete_recipe():
     try:
+        # Log incoming request data for debugging
+        print("Incoming request data:", request.json)
+        print("Session data:", dict(session))  # Debug session data
+
+        # Extract the recipe title from the request JSON
         data = request.json
-        recipe_title = data.get('title')
-        username = session.get('user_email')  # Use 'user_email' for consistency
+        recipe_title = data.get('title')  # Extract 'title' from request body
+        username = session.get('user_email')  # Get the user's email from the session
 
-        if not recipe_title or not username:
-            return jsonify({'success': False, 'message': 'Invalid request'})
+        # Log extracted values for debugging
+        print("Extracted recipe_title:", recipe_title)
+        print("Extracted username:", username)
 
-        # # Connect to the database and delete the recipe
-        # conn = sqlite3.connect('recipes.db')
-        # cursor = conn.cursor()
-        # cursor.execute('DELETE FROM recipes WHERE title = ? AND username = ?', (recipe_title, username))
-        # conn.commit()
-        # conn.close()
+        # Validate the input parameters
+        if not recipe_title:
+            return jsonify({'success': False, 'message': 'Invalid request: Missing recipe title'}), 400
+        if not username:
+            return jsonify({'success': False, 'message': 'Invalid request: Missing user email'}), 400
 
-        delete_recipe_from_db(username,recipe_title)
-        return jsonify({'success': True})
+        # Perform the deletion using the database helper
+        success = delete_recipe_from_db(username, recipe_title)
+        if success:
+            return jsonify({'success': True, 'message': f'Recipe "{recipe_title}" deleted successfully'})
+        else:
+            return jsonify({'success': False, 'message': f'Failed to delete recipe "{recipe_title}"'}), 500
     except Exception as e:
         print('Error:', e)
-        return jsonify({'success': False, 'message': 'An error occurred'})
+        return jsonify({'success': False, 'message': 'An error occurred while deleting the recipe'}), 500
 
 @app.route('/ask-question', methods=['POST'])
 def ask_question():
