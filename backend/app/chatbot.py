@@ -143,8 +143,13 @@ def get_recipe_suggestions(ingredients, cuisine_type):
     
     # Parse the recipe text to extract structured data
     title = get_title(recipe_text)
+    title = title.replace('#', '')
+
     ingredients_list = recipe_text.split("Ingredients:")[1].split("Instructions:")[0].strip().split('\n')
+    # ingredients_list = ingredients_list.replace('\n', '<br>')
+
     instructions = recipe_text.split("Instructions:")[1].strip()
+    instructions = instructions.replace('\n', '<br>')
     
     return {
         "title": title,

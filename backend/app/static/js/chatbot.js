@@ -76,9 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const data = await handleResponse(response);
     if (data) {
       displayMessage("Bot", data.message);
-      displayMessage("", `Title: ${data.title}`);
-      displayMessage("", `Ingredients: ${data.ingredients}`);
-      displayMessage("", `Instructions: ${data.instructions}`);
+      displayRecipe(data.title, data.ingredients, data.instructions);
       console.log(data)
       initializeButton(data);
       sessionStorage.setItem("step", "questions");
@@ -173,4 +171,30 @@ document.addEventListener("DOMContentLoaded", function () {
     chatWindow.appendChild(messageElement);
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }
+
+  function displayRecipe(title, ingredient, instructions) {
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message");
+
+    console.log(title)
+    console.log(ingredient)
+    console.log(typeof(ingredient))
+    console.log(instructions)
+    console.log(typeof(instructions))
+    // Create HTML for Ingredients list
+    let ingredientListHTML = '<ul style="list-style-type: none; padding-left: 0;">';
+    ingredient.forEach(item => {
+        ingredientListHTML += `<li>${item}</li>`;
+    });
+    ingredientListHTML += '</ul>';
+
+    // Set innerHTML of messageElement
+    messageElement.innerHTML = `<em>Title:</em> ${title}<br>
+                                <em>Ingredients:</em> ${ingredientListHTML}
+                                <em>Instructions:<br></em> ${instructions}`;
+
+    chatWindow.appendChild(messageElement);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
 });

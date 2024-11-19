@@ -93,7 +93,7 @@ def get_recipe_suggestions_route():
 
     # Return the recipe and ask if the user wants to save it
     return jsonify({
-        "message": "Here’s what I came up with.\n Would you like to save this recipe?\n\n",
+        "message": "Here’s what I came up with.\n",
         "title": suggestions['title'],
         "ingredients": suggestions['ingredients'],
         "instructions": suggestions['instructions']
