@@ -25,10 +25,14 @@
     <div id="chatWindow"></div>
     <form id="chatForm">
       <input type="text" id="userInput" placeholder="Ask a recipe-related question..." required />
-      <button type="submit" id="submitButton">Send</button>
+      <div id="buttonWrapper">
+        <button type="button" id="pepperButton"> 🌶️ </button>
+        <button type="submit" id="submitButton">Send</button>
+      </div>
     </form>
   </section>
-
+  
+  <div id="pepperContainer"></div> <!-- Added container for falling emojis -->
   <script src="static/js/chatbot.js"></script>
 </body>
 </html>
