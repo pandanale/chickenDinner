@@ -45,15 +45,14 @@
             </div>
             <!-- Instructions Section -->
             <div>
-<<<<<<< Updated upstream
                 <strong>Instructions:</strong>
-                <p>{{ recipe[2] | safe}}</p>
+                <p>
+                    {% set instructions_lines = recipe[2].split('<br>') %}
+                    {% for line in instructions_lines[:-1] %} <!-- Exclude the last line -->
+                        {{ line }}<br>
+                    {% endfor %}
+                </p>
             </div>
-=======
-              <strong>Instructions:</strong>
-              <p>{{ recipe[2] | safe }}</p>
-            </div>    
->>>>>>> Stashed changes
         </div>
         
         

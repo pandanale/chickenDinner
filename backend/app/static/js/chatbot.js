@@ -121,61 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
     toggleInput();
   }
 
-  // function initializeButton() {
-  //   displayButtons(["Save Recipe"], handleSaveRecipeButton);
-  //   displayButtons(["Generate Image of Recipe"], handleGenerateImageButton)
-  // }  
-
-  // function displayButtons(buttonTexts, clickHandler) {
-  //   const buttonsContainer = document.createElement("div");
-  //   buttonsContainer.classList.add("buttons-wrapper");
-  //   buttonsContainer.style.display = "flex"; // Arrange buttons in a row
-  //   buttonsContainer.style.justifyContent = "center"; // Center-align the buttons
-  //   buttonsContainer.style.marginTop = "20px"; // Add spacing above
-  
-  //   buttonTexts.forEach((text) => {
-  //     const button = document.createElement("button");
-  //     button.classList.add("tooltip-button"); // Add a class for styling
-  //     button.style.display = "flex";
-  //     button.style.alignItems = "center";
-  //     button.style.justifyContent = "center";
-  //     button.style.padding = "10px";
-  //     button.style.border = "none";
-  //     button.style.backgroundColor = "transparent";
-  //     button.style.cursor = "pointer";
-  //     button.style.margin = "0 10px"; // Add space between buttons
-  
-  //     // Add Font Awesome icon and set data-action
-  //     const icon = document.createElement("i");
-  //     if (text === "Save Recipe") {
-  //       icon.className = "fa-regular fa-heart"; // Font Awesome heart icon
-  //       button.setAttribute("data-action", "save");
-  //       button.setAttribute("data-tooltip", "Wanna save this recipe?"); // Tooltip text
-  //     } else if (text === "Generate Image of Recipe") {
-  //       icon.className = "fa-regular fa-image"; // Font Awesome image icon
-  //       button.setAttribute("data-action", "generate");
-  //       button.setAttribute("data-tooltip", "Generate an image of this recipe"); // Tooltip text
-  //     }
-  
-  //     // Style the icon
-  //     icon.style.fontSize = "40px"; // Adjust size
-  //     icon.style.color = "#0056b3"; // Adjust color
-  //     button.appendChild(icon);
-  
-  //     // Ensure the button click triggers the clickHandler
-  //     button.addEventListener("click", (event) => {
-  //       event.preventDefault(); // Prevent default button behavior
-  //       clickHandler(event); // Call the handler with the event
-  //     });
-  
-  //     // Append the button to the container
-  //     buttonsContainer.appendChild(button);
-  //   });
-  
-  //   // chatWindow.appendChild(buttonsContainer);
-  //   chatWindow.scrollTop = chatWindow.scrollHeight;
-  // }
-  
   function handleSaveRecipeButton(event) {
     const button = event.currentTarget;
     const icon = button.querySelector("i"); // Find the icon within the button
@@ -384,7 +329,6 @@ async function deleteRecipe(recipeTitle) {
     iconContainer.appendChild(askQuestionButton);
 
     // Add Question Button and Icons to Recipe Card
-    // recipeCard.appendChild(askQuestionButton);
     recipeCard.appendChild(iconContainer);
 
     // Append Recipe Card to Chat Window
