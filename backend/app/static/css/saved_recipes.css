@@ -67,6 +67,70 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* Ensure buttons are inline and centered */
+.buttons-wrapper {
+    display: flex; /* Align items inline */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    gap: 20px; /* Add space between buttons */
+    margin-top: 20px; /* Spacing from the top */
+}
+
+/* Buttons with tooltips */
+.tooltip-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    display: flex; /* Ensure the icon and tooltip align */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Icon Styling */
+.tooltip-button i {
+    font-size: 40px; /* Adjust icon size */
+    color: #0056b3; /* Icon color */
+    transition: transform 0.3s ease; /* Add smooth hover effect */
+}
+
+.tooltip-button i:hover {
+    transform: scale(1.2); /* Slightly enlarge on hover */
+    color: #003d80; /* Change color on hover */
+}
+
+.tooltip-button::after {
+    content: attr(data-tooltip); /* Display tooltip text */
+    position: absolute;
+    bottom: -35px; /* Position tooltip below button */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85); /* Slightly darker background for better contrast */
+    color: #fff; /* White text */
+    padding: 6px 12px; /* Adjust padding for better spacing */
+    border-radius: 8px; /* Smooth border */
+    font-size: 14px; /* Adjust font size */
+    white-space: nowrap; /* Prevent wrapping */
+    opacity: 0; /* Hidden by default */
+    pointer-events: none; /* Prevent mouse interaction */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth fade-in and lift effect */
+    z-index: 10;
+  }
+  
+  .tooltip-button:hover::after {
+    opacity: 1; /* Show tooltip on hover */
+    transform: translateX(-50%) translateY(-5px); /* Slight lift effect */
+  }
+  
+
+/* Buttons container */
+.buttons-container {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
 /* Buttons container */
 .buttons-container {
     margin-bottom: 20px;

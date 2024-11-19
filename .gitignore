@@ -5,4 +5,4 @@ authorized_emails.txt
 recipe_img.png
 user_recipes/*
 backend/app/__pycache__/
-env
+env/

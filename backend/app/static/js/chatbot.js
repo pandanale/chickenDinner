@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const savedRecipesButton = document.getElementById("savedRecipesButton");
   const chatbotButton = document.getElementById("chatbotButton")
 
+  document.getElementById('pepperButton').addEventListener('click', makePeppersFall);
+
   // Logout functionality
   logoutButton?.addEventListener("click", async function () {
     const response = await fetch("/api/logout", { method: "POST" });
@@ -60,6 +62,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+
+  function makePeppersFall() {
+    const container = document.getElementById('pepperContainer');
+    for (let i = 0; i < 20; i++) { // Adjust the number of peppers as needed
+        const pepper = document.createElement('span');
+        pepper.className = 'pepper';
+        pepper.textContent = '🌶️';
+        pepper.style.left = Math.random() * 100 + 'vw';
+        pepper.style.animationDuration = (Math.random() * 2 + 3) + 's'; // Random duration between 3s and 5s
+        pepper.style.fontSize = (Math.random() * 10 + 20) + 'px'; // Random font size between 20px and 30px
+        
+        container.appendChild(pepper);
+
+        // Remove the pepper after it's fallen
+        setTimeout(() => {
+            if (container.contains(pepper)) {
+                container.removeChild(pepper);
+            }
+        }, 5000);
+    }
+}
+
   function toggleInput() {
     var input = document.getElementById("userInput");
     input.disabled = !input.disabled;
@@ -102,30 +126,84 @@ document.addEventListener("DOMContentLoaded", function () {
     displayButtons(["Generate Image of Recipe"], handleGenerateImageButton)
   }  
 
-  function displayButtons(buttonTexts, clickHandler, recipeData) {
+  function displayButtons(buttonTexts, clickHandler) {
     const buttonsContainer = document.createElement("div");
-    buttonsContainer.classList.add("rightButtons");
-    buttonTexts.forEach(text => {
+    buttonsContainer.classList.add("buttons-wrapper");
+    buttonsContainer.style.display = "flex"; // Arrange buttons in a row
+    buttonsContainer.style.justifyContent = "center"; // Center-align the buttons
+    buttonsContainer.style.marginTop = "20px"; // Add spacing above
+  
+    buttonTexts.forEach((text) => {
       const button = document.createElement("button");
-      button.innerText = text;
-      button.addEventListener("click", clickHandler);
+      button.classList.add("tooltip-button"); // Add a class for styling
+      button.style.display = "flex";
+      button.style.alignItems = "center";
+      button.style.justifyContent = "center";
+      button.style.padding = "10px";
+      button.style.border = "none";
+      button.style.backgroundColor = "transparent";
+      button.style.cursor = "pointer";
+      button.style.margin = "0 10px"; // Add space between buttons
+  
+      // Add Font Awesome icon and set data-action
+      const icon = document.createElement("i");
+      if (text === "Save Recipe") {
+        icon.className = "fa-regular fa-heart"; // Font Awesome heart icon
+        button.setAttribute("data-action", "save");
+        button.setAttribute("data-tooltip", "Wanna save this recipe?"); // Tooltip text
+      } else if (text === "Generate Image of Recipe") {
+        icon.className = "fa-regular fa-image"; // Font Awesome image icon
+        button.setAttribute("data-action", "generate");
+        button.setAttribute("data-tooltip", "Generate an image of this recipe"); // Tooltip text
+      }
+  
+      // Style the icon
+      icon.style.fontSize = "40px"; // Adjust size
+      icon.style.color = "#0056b3"; // Adjust color
+      button.appendChild(icon);
+  
+      // Ensure the button click triggers the clickHandler
+      button.addEventListener("click", (event) => {
+        event.preventDefault(); // Prevent default button behavior
+        clickHandler(event); // Call the handler with the event
+      });
+  
+      // Append the button to the container
       buttonsContainer.appendChild(button);
     });
+  
     chatWindow.appendChild(buttonsContainer);
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }
   
   function handleSaveRecipeButton(event) {
-    const action = event.target.innerText;
-    if (action === "Save Recipe") {
-      saveRecipe();
+    const button = event.currentTarget;
+    const icon = button.querySelector("i"); // Find the icon within the button
+  
+    // Check the current state of the icon
+    if (icon.classList.contains("fa-regular")) {
+      // Change to solid heart and call saveRecipe
+      icon.classList.remove("fa-regular", "fa-heart");
+      icon.classList.add("fa-solid", "fa-heart");
+      button.setAttribute("data-tooltip", "Recipe saved");
+      console.log("Save Recipe button clicked!");
+      saveRecipe(); // Call the saveRecipe function here
+    } else {
+      // Change back to regular heart
+      icon.classList.remove("fa-solid", "fa-heart");
+      icon.classList.add("fa-regular", "fa-heart");
+      button.setAttribute("data-tooltip", "Save this recipe");
+      console.log("Unsave Recipe button clicked!");
     }
   }
 
   function handleGenerateImageButton(event) {
-    const action = event.target.innerText;
-    if (action === "Generate Image of Recipe") {
-      generateImage();
+    const button = event.currentTarget; // Get the button element
+    const action = button.getAttribute("data-action"); // Get the action from the data attribute
+  
+    if (action === "generate") {
+      console.log("Generate Image button clicked!");
+      generateImage(); // Call the generateImage function
     }
   }
 
