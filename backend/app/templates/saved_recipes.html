@@ -7,16 +7,15 @@
     <link rel="stylesheet" href="/static/css/saved_recipes.css">
 </head>
 <body>
-  <nav>
-    <div id="leftButtons">
-      <button id="toggleButton" onclick="window.location.href='/chatbot'" >Chatbot</button>
-    </div>
-    <div id="rightButtons">
-        <span id="greeting"> Hello user! </span>
-        <span> | </span>
-        <button id="logoutButton"  onclick="window.location.href='/login'"">Logout</button>
-    </div>
-  </nav>
+    <nav>
+        <div id="leftButtons">
+          <button id="toggleButton" onclick="window.location.href='/chatbot'" >Chatbot</button>
+        </div>
+        <div id="rightButtons">
+          <span id="greeting"> You're a winner winner chicken dinner, <strong>{{session['username']}}</strong>!</span>        <span> | </span>
+            <button id="logoutButton"  onclick="window.location.href='/login'"">Logout</button>
+        </div>
+      </nav>
 
     <h1>Your Saved Recipes</h1>
     <!-- Display saved recipes -->
