@@ -41,12 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
         case "ingredients":
           await getRecipeSuggestions(message);
           break;
-        case "save_recipe":
-          await saveRecipe(message);
-          break;
-        case "generate_image":
-          await generateImage(message);
-          break;
         case "questions":
           await askQuestion(message);
           break;
@@ -85,32 +79,57 @@ document.addEventListener("DOMContentLoaded", function () {
       displayMessage("", `Title: ${data.title}`);
       displayMessage("", `Ingredients: ${data.ingredients}`);
       displayMessage("", `Instructions: ${data.instructions}`);
-      sessionStorage.setItem("step", "save_recipe");
+      console.log(data)
+      initializeButton(data);
+      sessionStorage.setItem("step", "questions");
     }
   }
 
-  async function saveRecipe(message) {
+  function initializeButton() {
+    displayButtons(["Save Recipe"], handleSaveRecipeButton);
+    displayButtons(["Generate Image of Recipe"], handleGenerateImageButton)
+  }  
+
+  function displayButtons(buttonTexts, clickHandler, recipeData) {
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.classList.add("rightButtons");
+    buttonTexts.forEach(text => {
+      const button = document.createElement("button");
+      button.innerText = text;
+      button.addEventListener("click", clickHandler);
+      buttonsContainer.appendChild(button);
+    });
+    chatWindow.appendChild(buttonsContainer);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+  
+  function handleSaveRecipeButton(event) {
+    const action = event.target.innerText;
+    if (action === "Save Recipe") {
+      saveRecipe();
+    }
+  }
+
+  function handleGenerateImageButton(event) {
+    const action = event.target.innerText;
+    if (action === "Generate Image of Recipe") {
+      generateImage();
+    }
+  }
+
+  async function saveRecipe() {
     const response = await fetch("/save-recipe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ save: message }),
+      body: JSON.stringify({ save: 'yes' }),
     });
-    const data = await handleResponse(response);
-    if (data) {
-      displayMessage("Bot", data.message);
-      if (message.toLowerCase() === "yes") {
-        sessionStorage.setItem("step", "generate_image");
-      } else {
-        sessionStorage.setItem("step", "questions");
-      }
-    }
   }
 
-  async function generateImage(message) {
+  async function generateImage() {
     const response = await fetch("/generate-image", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ generate: message }),
+      body: JSON.stringify({ generate: 'yes' }),
     });
     const data = await handleResponse(response);
     if (data) {
@@ -121,7 +140,6 @@ document.addEventListener("DOMContentLoaded", function () {
           `<img src="${data.image_url}" alt="Generated Recipe Image">`
         );
       }
-      sessionStorage.setItem("step", "questions");
     }
   }
 

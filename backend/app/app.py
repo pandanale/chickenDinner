@@ -140,10 +140,6 @@ def saved_recipes():
 
 @app.route('/generate-image', methods=['POST'])
 def generate_image_route():
-    # Ensure that we are in the correct step
-    if session.get('step') != 'generate_image':
-        return jsonify({"message": "Please decide whether to save the recipe first."}), 400
-
     # Retrieve the data from the request
     data = request.json
     generate = data.get('generate')

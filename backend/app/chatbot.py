@@ -181,6 +181,7 @@ def generate_recipe_image(title):
         print("Image generated and saved as recipe_image.png.")
     except Exception as e:
         print(f"Error generating image: {e}")
+    return image_url
 
 def display_recipe_db(conn):
     cursor = conn.cursor()
