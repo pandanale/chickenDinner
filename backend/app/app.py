@@ -203,7 +203,17 @@ def delete_recipe():
         print('Error:', e)
         return jsonify({'success': False, 'message': 'An error occurred'})
 
+@app.route('/ask-question', methods=['POST'])
+def ask_question():
+    data = request.json
+    question = data.get('question')
+    recipe = data.get('recipe')
+    if not recipe:
+        return jsonify({"response": "No recipe context found to answer your question."})
 
+    # Process the question and recipe data here
+    answer = handle_recipe_questions(question, recipe)
+    return jsonify({"response": answer})
 
 if __name__ == "__main__":
     app.run(debug=True)

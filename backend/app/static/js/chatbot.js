@@ -266,23 +266,24 @@ async function deleteRecipe(recipeTitle) {
       if (data.image_url) {
         displayMessage(
           "",
-          `<img src="${data.image_url}" alt="Generated Recipe Image" style="max-width: 100%; max-height: 100%; width: auto; height: auto; aspect-ratio: 1 / 1;">`
+          `<img src="${data.image_url}" alt="Generated Recipe Image" style="max-width: 75%; max-height: 75%; width: auto; height: auto; aspect-ratio: 1 / 1;">`
         );
       }
     }
   }
 
   async function askQuestion(message) {
+    const recipeContext = JSON.parse(sessionStorage.getItem("recipeContext"));
     const response = await fetch("/ask-question", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: message }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: message, recipe: recipeContext }),
     });
     const data = await handleResponse(response);
     if (data) {
-      displayMessage("Bot", data.response);
+        displayMessage("Bot", data.response);
     }
-  }
+}
 
   async function handleResponse(response) {
     if (response.ok) {
@@ -302,19 +303,15 @@ async function deleteRecipe(recipeTitle) {
     chatWindow.appendChild(messageElement);
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }
-
   function displayRecipe(title, ingredients, instructions) {
-    // Create a recipe card container
     const recipeCard = document.createElement("div");
     recipeCard.classList.add("recipe-card");
 
-    // Add the recipe title
     const recipeTitle = document.createElement("h2");
     recipeTitle.textContent = title;
-    recipeTitle.style.textAlign = "center"; // Center align the title
+    recipeTitle.style.textAlign = "center";
     recipeCard.appendChild(recipeTitle);
 
-    // Add ingredients list
     const ingredientsSection = document.createElement("div");
     ingredientsSection.innerHTML = "<strong>Ingredients:</strong>";
     const ingredientsList = document.createElement("ul");
@@ -328,14 +325,23 @@ async function deleteRecipe(recipeTitle) {
     ingredientsSection.appendChild(ingredientsList);
     recipeCard.appendChild(ingredientsSection);
 
-    // Add instructions
     const instructionsSection = document.createElement("div");
     instructionsSection.innerHTML = `<strong>Instructions:</strong> <p>${instructions}</p>`;
     recipeCard.appendChild(instructionsSection);
 
-    // Append the recipe card to the chat window
+    const askQuestionButton = document.createElement("button");
+    askQuestionButton.textContent = "Ask a Question About the Recipe";
+    askQuestionButton.classList.add("ask-question-button");
+    askQuestionButton.style.marginTop = "10px";
+    askQuestionButton.addEventListener("click", () => {
+        toggleInput();
+        sessionStorage.setItem("recipeContext", JSON.stringify({ title, ingredients, instructions }));
+    });
+
+    recipeCard.appendChild(askQuestionButton);
     chatWindow.appendChild(recipeCard);
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
+
 
 });
