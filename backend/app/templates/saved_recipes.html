@@ -7,33 +7,48 @@
     <link rel="stylesheet" href="/static/css/saved_recipes.css">
 </head>
 <body>
-    <nav>
-        <div id="leftButtons">
-          <button id="homeButton">Profile</button>
-        </div>
-        <div id="rightButtons">
-          <button id="chatbotButton">Chatbot</button>
-          <button id="logoutButton">Logout</button>
-        </div>
-      </nav>
+  <nav>
+    <div id="leftButtons">
+      <button id="toggleButton" onclick="window.location.href='/chatbot'" >Chatbot</button>
+    </div>
+    <div id="rightButtons">
+        <span id="greeting"> Hello user! </span>
+        <span> | </span>
+        <button id="logoutButton"  onclick="window.location.href='/login'"">Logout</button>
+    </div>
+  </nav>
+
     <h1>Your Saved Recipes</h1>
-
-    <!-- Navigation buttons -->
-    <!-- <div class="buttons-container">
-        <button id="homeButton" onclick="window.location.href='/'">Go Back Home</button>
-        <button id="chatbotButton" onclick="window.location.href='/chatbot'">Go Back to Chatbot</button>
-    </div> -->
-
     <!-- Display saved recipes -->
     <div id="recipes">
-        {% for recipe in recipes %}
-        <div class="recipe-card">
-            <h2>{{ recipe[0] }}</h2>
-            <p><strong>Ingredients:</strong> {{ recipe[1] }}</p>
-            <p><strong>Instructions:</strong> {{ recipe[2] }}</p>
-        </div>
-        {% endfor %}
-    </div>
+      {% if recipes|length == 0 %}
+          <p>You don't have any saved recipes.</p>
+          <button id="chatbotButton" onclick="window.location.href='/chatbot'">Let's make one!</button>
+      {% else %}
+          {% for recipe in recipes %}
+          <div class="recipe-card">
+              <h2>{{ recipe[0] }}</h2> <!-- Recipe Title -->
+              
+              <!-- Ingredients Section -->
+              <div>
+                  <strong>Ingredients:</strong>
+                  <ul style="list-style-type: none; padding-left: 0;">
+                      {% for ingredient in recipe[1].split(', ') %}
+                      <li>{{ ingredient }}</li>
+                      {% endfor %}
+                  </ul>
+              </div>
+  
+              <!-- Instructions Section -->
+              <div>
+                  <strong>Instructions:</strong>
+                  <p>{{ recipe[2] }}</p>
+              </div>
+          </div>
+          {% endfor %}
+      {% endif %}
+  </div>
+  
     <script src="static/js/chatbot.js"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const logoutButton = document.getElementById("logoutButton");
   const homeButton = document.getElementById("homeButton");
   const savedRecipesButton = document.getElementById("savedRecipesButton");
+  const chatbotButton = document.getElementById("chatbotButton")
 
   // Logout functionality
   logoutButton?.addEventListener("click", async function () {
@@ -176,28 +177,38 @@ document.addEventListener("DOMContentLoaded", function () {
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }
 
-  function displayRecipe(title, ingredient, instructions) {
-    const messageElement = document.createElement("div");
-    messageElement.classList.add("message");
+  function displayRecipe(title, ingredients, instructions) {
+    // Create a recipe card container
+    const recipeCard = document.createElement("div");
+    recipeCard.classList.add("recipe-card");
 
-    console.log(title)
-    console.log(ingredient)
-    console.log(typeof(ingredient))
-    console.log(instructions)
-    console.log(typeof(instructions))
-    // Create HTML for Ingredients list
-    let ingredientListHTML = '<ul style="list-style-type: none; padding-left: 0;">';
-    ingredient.forEach(item => {
-        ingredientListHTML += `<li>${item}</li>`;
+    // Add the recipe title
+    const recipeTitle = document.createElement("h2");
+    recipeTitle.textContent = title;
+    recipeTitle.style.textAlign = "center"; // Center align the title
+    recipeCard.appendChild(recipeTitle);
+
+    // Add ingredients list
+    const ingredientsSection = document.createElement("div");
+    ingredientsSection.innerHTML = "<strong>Ingredients:</strong>";
+    const ingredientsList = document.createElement("ul");
+    ingredientsList.style.listStyleType = "none";
+    ingredientsList.style.paddingLeft = "0";
+    ingredients.forEach((item) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = item;
+        ingredientsList.appendChild(listItem);
     });
-    ingredientListHTML += '</ul>';
+    ingredientsSection.appendChild(ingredientsList);
+    recipeCard.appendChild(ingredientsSection);
 
-    // Set innerHTML of messageElement
-    messageElement.innerHTML = `<em>Title:</em> ${title}<br>
-                                <em>Ingredients:</em> ${ingredientListHTML}
-                                <em>Instructions:<br></em> ${instructions}`;
+    // Add instructions
+    const instructionsSection = document.createElement("div");
+    instructionsSection.innerHTML = `<strong>Instructions:</strong> <p>${instructions}</p>`;
+    recipeCard.appendChild(instructionsSection);
 
-    chatWindow.appendChild(messageElement);
+    // Append the recipe card to the chat window
+    chatWindow.appendChild(recipeCard);
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 

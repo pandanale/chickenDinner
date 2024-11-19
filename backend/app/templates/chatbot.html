@@ -9,11 +9,12 @@
 <body>
   <nav>
     <div id="leftButtons">
-      <button id="homeButton">Home</button>
+      <button id="toggleButton" onclick="window.location.href='/saved-recipes'" >Saved Recipes</button>
     </div>
     <div id="rightButtons">
-      <button id="savedRecipesButton">Saved Recipes</button>
-      <button id="logoutButton">Logout</button>
+        <span id="greeting"> <span id="greeting"> Hello user! </span>
+        <span> | </span>
+        <button id="logoutButton"  onclick="window.location.href='/login'"">Logout</button>
     </div>
   </nav>
 

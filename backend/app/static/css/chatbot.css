@@ -97,3 +97,25 @@ nav button:hover {
 #chatForm button:hover {
     background-color: #0056b3;
 }
+.recipe-card {
+    background-color: #e0f7fa;
+    border: 1px solid #b2ebf2;
+    border-radius: 15px;
+    padding: 20px;
+    width: 600px; /* Adjusted width to make it wider */
+    max-width: 80%; /* Ensure it doesn't take up too much width on small screens */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    margin: 0 auto 20px; /* Center the card and add spacing between cards */
+}
+
+.recipe-card h2 {
+    margin-top: 0;
+    color: #00796b;
+    text-align: center; /* Center align the title */
+}
+
+.recipe-card p {
+    margin: 10px 0;
+    line-height: 1.6; /* Improve readability */
+}
