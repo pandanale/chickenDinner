@@ -60,6 +60,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  function toggleInput() {
+    var input = document.getElementById("userInput");
+    input.disabled = !input.disabled;
+
+    var button = document.getElementById("submitButton")
+    button.disabled = !button.disabled;
+}
+
   async function startChat() {
     const response = await fetch("/start-chat", {
       method: "POST",
@@ -86,6 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
       initializeButton(data);
       sessionStorage.setItem("step", "questions");
     }
+    toggleInput();
   }
 
   function initializeButton() {

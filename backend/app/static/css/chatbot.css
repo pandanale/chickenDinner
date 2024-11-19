@@ -19,6 +19,7 @@ nav {
 #leftButtons {
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
 /* Right-aligned buttons (Saved Recipes, Logout) */
@@ -97,6 +98,13 @@ nav button:hover {
 #chatForm button:hover {
     background-color: #0056b3;
 }
+
+#chatForm button:disabled {
+    background-color: #cccccc; /* Gray color */
+    color: #666666; /* Dark gray text */
+    cursor: not-allowed;
+}
+
 .recipe-card {
     background-color: #e0f7fa;
     border: 1px solid #b2ebf2;

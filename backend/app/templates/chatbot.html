@@ -10,6 +10,7 @@
   <nav>
     <div id="leftButtons">
       <button id="toggleButton" onclick="window.location.href='/saved-recipes'" >Saved Recipes</button>
+      <button id="newChat" onclick="window.location.href='/chatbot'" >New Chat</button>
     </div>
     <div id="rightButtons">
         <span id="greeting"> <span id="greeting"> Hello user! </span>
@@ -22,7 +23,7 @@
     <div id="chatWindow"></div>
     <form id="chatForm">
       <input type="text" id="userInput" placeholder="Ask a recipe-related question..." required />
-      <button type="submit">Send</button>
+      <button type="submit" id="submitButton">Send</button>
     </form>
   </section>
 
