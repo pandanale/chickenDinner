@@ -147,6 +147,66 @@ nav button:hover {
     font-size: 24px;
     animation: fall linear infinite;
   }
+
+  .button-container button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+    background-color: #0056b3;
+}
+
+.tooltip-button i {
+    font-size: 20px;
+    color: white;
+}
+
+.ask-question-button {
+    background-color: #28a745;
+}
+
+.ask-question-button:hover {
+    background-color: #1e7e34;
+}
+
+/* Icon Styling */
+.icon-container i {
+    font-size: 24px; /* Adjust icon size */
+    color: #007bff; /* Adjust icon color */
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.icon-container i:hover {
+    transform: scale(1.2); /* Slightly enlarge on hover */
+    color: #0056b3; /* Darker blue on hover */
+}
+
+/* Question Button Styling */
+.ask-question-button {
+    display: block;
+    margin: 10px auto; /* Center the button */
+    padding: 10px 15px;
+    font-size: 14px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.ask-question-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+
   
   @keyframes fall {
     0% {

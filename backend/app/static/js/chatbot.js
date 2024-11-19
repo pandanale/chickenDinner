@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
       buttonsContainer.appendChild(button);
     });
   
-    chatWindow.appendChild(buttonsContainer);
+    // chatWindow.appendChild(buttonsContainer);
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }
   
@@ -303,15 +303,18 @@ async function deleteRecipe(recipeTitle) {
     chatWindow.appendChild(messageElement);
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }
+
   function displayRecipe(title, ingredients, instructions) {
     const recipeCard = document.createElement("div");
     recipeCard.classList.add("recipe-card");
 
+    // Recipe Title
     const recipeTitle = document.createElement("h2");
     recipeTitle.textContent = title;
     recipeTitle.style.textAlign = "center";
     recipeCard.appendChild(recipeTitle);
 
+    // Ingredients Section
     const ingredientsSection = document.createElement("div");
     ingredientsSection.innerHTML = "<strong>Ingredients:</strong>";
     const ingredientsList = document.createElement("ul");
@@ -325,10 +328,47 @@ async function deleteRecipe(recipeTitle) {
     ingredientsSection.appendChild(ingredientsList);
     recipeCard.appendChild(ingredientsSection);
 
+    // Instructions Section
     const instructionsSection = document.createElement("div");
     instructionsSection.innerHTML = `<strong>Instructions:</strong> <p>${instructions}</p>`;
     recipeCard.appendChild(instructionsSection);
 
+    // Icon Container
+    const iconContainer = document.createElement("div");
+    iconContainer.classList.add("icon-container");
+    iconContainer.style.display = "flex";
+    iconContainer.style.justifyContent = "center";
+    iconContainer.style.gap = "20px"; // Add space between icons
+    iconContainer.style.marginTop = "15px";
+
+    // Heart Icon
+    const heartIcon = document.createElement("i");
+    heartIcon.className = "fa-regular fa-heart";
+    heartIcon.style.cursor = "pointer";
+    heartIcon.addEventListener("click", () => {
+        if (heartIcon.classList.contains("fa-regular")) {
+            heartIcon.classList.remove("fa-regular");
+            heartIcon.classList.add("fa-solid");
+            console.log("Recipe saved!");
+        } else {
+            heartIcon.classList.remove("fa-solid");
+            heartIcon.classList.add("fa-regular");
+            console.log("Recipe unsaved!");
+        }
+    });
+    iconContainer.appendChild(heartIcon);
+
+    // Image Icon
+    const imageIcon = document.createElement("i");
+    imageIcon.className = "fa-regular fa-image";
+    imageIcon.style.cursor = "pointer";
+    imageIcon.addEventListener("click", () => {
+        console.log("Generate Image button clicked!");
+        generateImage();
+    });
+    iconContainer.appendChild(imageIcon);
+
+    // Question Button
     const askQuestionButton = document.createElement("button");
     askQuestionButton.textContent = "Ask a Question About the Recipe";
     askQuestionButton.classList.add("ask-question-button");
@@ -338,10 +378,16 @@ async function deleteRecipe(recipeTitle) {
         sessionStorage.setItem("recipeContext", JSON.stringify({ title, ingredients, instructions }));
     });
 
+    // Add Question Button and Icons to Recipe Card
     recipeCard.appendChild(askQuestionButton);
+    recipeCard.appendChild(iconContainer);
+
+    // Append Recipe Card to Chat Window
     chatWindow.appendChild(recipeCard);
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
+
+
 
 
 });
