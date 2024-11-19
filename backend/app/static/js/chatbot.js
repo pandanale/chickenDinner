@@ -199,14 +199,63 @@ async function deleteRecipe(recipeTitle) {
     });
   }
 
-  async function generateImage() {
+  let isImageGenerating = false; // Track whether an image is being generated
+
+async function generateImage() {
+  try {
+    if (isImageGenerating) {
+      displayMessage("Bot", "An image is already being generated. Please wait...");
+      return;
+    }
+
+    // Set the flag to true to prevent multiple requests
+    isImageGenerating = true;
+
+    // Disable the "Generate Image" button (optional)
+    const generateButton = document.querySelector('.generate-image-button');
+    if (generateButton) generateButton.disabled = true;
+
+    // Step 1: Send the initial request
     const response = await fetch("/generate-image", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ generate: 'yes' }),
+      body: JSON.stringify({ generate: "yes" }),
     });
-    const data = await handleResponse(response);
-    if (data) {
+
+    const data = await response.json();
+
+    // Display "Generating image..." message in the chat window
+    displayMessage("Bot", data.message);
+
+    // Step 2: Poll for the generated image
+    await pollForGeneratedImage();
+
+    // Reset the flag and re-enable the button after the image is generated
+    isImageGenerating = false;
+    if (generateButton) generateButton.disabled = false;
+
+  } catch (error) {
+    console.error("Error generating image:", error);
+    displayMessage("Bot", "An error occurred while generating the image. Please try again.");
+    isImageGenerating = false; // Reset the flag in case of an error
+    const generateButton = document.querySelector('.generate-image-button');
+    if (generateButton) generateButton.disabled = false;
+  }
+}
+
+async function pollForGeneratedImage() {
+  try {
+    // Wait a short time before polling
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const response = await fetch("/generate-image-result", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
       displayMessage("Bot", data.message);
       if (data.image_url) {
         displayMessage(
@@ -214,8 +263,21 @@ async function deleteRecipe(recipeTitle) {
           `<img src="${data.image_url}" alt="Generated Recipe Image" style="max-width: 75%; max-height: 75%; width: auto; height: auto; aspect-ratio: 1 / 1;">`
         );
       }
+    } else {
+      displayMessage("Bot", data.message);
     }
+  } catch (error) {
+    console.error("Error polling for image:", error);
+    displayMessage("Bot", "An error occurred while retrieving the image.");
   }
+}
+
+function resetImageGeneration() {
+  isImageGenerating = false; // Reset the frontend flag
+  const generateButton = document.querySelector('.generate-image-button');
+  if (generateButton) generateButton.disabled = false;
+  displayMessage("Bot", "You can now generate a new image.");
+}
 
   async function askQuestion(message) {
     const recipeContext = JSON.parse(sessionStorage.getItem("recipeContext"));

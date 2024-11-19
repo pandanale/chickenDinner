@@ -137,36 +137,50 @@ def saved_recipes():
     recipes = get_user_recipes(email)
     return render_template('saved_recipes.html', recipes=recipes)
 
-
-
 @app.route('/generate-image', methods=['POST'])
 def generate_image_route():
-    # Retrieve the data from the request
-    data = request.json
-    generate = data.get('generate')
+    try:
+        # Check if an image is already generated
+        if session.get('image_generated', False):
+            return jsonify({"message": "Generating image..."}), 400
 
-    # Check if the user wants to generate an image
-    if generate and generate.lower() == "yes":
         # Retrieve recipe suggestions from the session
         suggestions = session.get('suggestions')
-        
         if not suggestions:
             return jsonify({"message": "No recipe suggestions found. Please start over."}), 400
-        
+
+        # Generate the image (placeholder response for initial request)
+        session['image_generated'] = False  # Image generation not completed yet
+        return jsonify({"message": "Generating image..."}), 200
+    except Exception as e:
+        print("Error generating image:", e)
+        return jsonify({"message": "An error occurred. Please try again."}), 500
+
+
+@app.route('/generate-image-result', methods=['GET'])
+def generate_image_result():
+    try:
+        # Retrieve recipe suggestions from the session
+        suggestions = session.get('suggestions')
+
+        if not suggestions:
+            return jsonify({"message": "No recipe suggestions found. Please start over."}), 400
+
         # Generate the image
         image_url = generate_recipe_image(suggestions['title'])
-        
         if image_url:
-            session['step'] = 'questions'
-            return jsonify({"message": "Image generated successfully! You can now ask questions about the recipe.", "image_url": image_url})
+            session['image_generated'] = True  # Mark the image as generated
+            return jsonify({"message": "Image generated successfully! This is what your dish could look like.", "image_url": image_url})
         else:
             return jsonify({"message": "Failed to generate image. Please try again."}), 500
+    except Exception as e:
+        print("Error generating image result:", e)
+        return jsonify({"message": "An error occurred while generating the image."}), 500
 
-    # If user does not want to generate an image
-    session['step'] = 'questions'
-    return jsonify({"message": "Okay, you can now ask questions about the recipe or let me know if you need anything else."})
-
-
+@app.route('/reset-image-generation', methods=['POST'])
+def reset_image_generation():
+    session['image_generated'] = False
+    return jsonify({"message": "Image generation state has been reset. You can now generate a new image."})
 
 @app.route('/ask-question', methods=['POST'])
 def ask_question_route():
