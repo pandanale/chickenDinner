@@ -27,6 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "/saved-recipes";
   });
 
+  chatbotButton?.addEventListener("click", () => {
+    window.location.href = "/chatbot";
+  });
+
   startChat();
 
   chatForm.addEventListener("submit", async function (event) {
