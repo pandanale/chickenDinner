@@ -392,8 +392,4 @@ async function deleteRecipe(recipeTitle) {
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-<<<<<<< Updated upstream
 });
-=======
-});
->>>>>>> Stashed changes
