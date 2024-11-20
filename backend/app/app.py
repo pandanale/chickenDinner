@@ -146,22 +146,18 @@ def saved_recipes():
 
 @app.route('/generate-image', methods=['POST'])
 def generate_image_route():
-    try:
-        # Check if an image is already generated
-        if session.get('image_generated', False):
-            return jsonify({"message": "Generating image..."}), 400
+    data = request.json
+    title = data.get('title')
 
-        # Retrieve recipe suggestions from the session
-        suggestions = session.get('suggestions')
-        if not suggestions:
-            return jsonify({"message": "No recipe suggestions found. Please start over."}), 400
+    if not title:
+        return jsonify({"message": "Missing title or instructions for image generation."}), 400
 
-        # Generate the image (placeholder response for initial request)
-        session['image_generated'] = False  # Image generation not completed yet
-        return jsonify({"message": "Generating image..."}), 200
-    except Exception as e:
-        print("Error generating image:", e)
-        return jsonify({"message": "An error occurred. Please try again."}), 500
+    # Call the function to generate the image
+    image_url = generate_recipe_image(title)
+    if image_url:
+        return jsonify({"message": "Image generated successfully!", "image_url": image_url})
+    else:
+        return jsonify({"message": "Failed to generate image."}), 500
 
 
 @app.route('/generate-image-result', methods=['GET'])

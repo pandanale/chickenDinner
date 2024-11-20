@@ -6,18 +6,18 @@
     <title>Saved Recipes</title>
     <link rel="stylesheet" href="/static/css/saved_recipes.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
 </head>
 <body>
     <nav>
         <div id="leftButtons">
-          <button id="toggleButton" onclick="window.location.href='/chatbot'" >Chatbot</button>
+          <button id="toggleButton" onclick="window.location.href='/chatbot'">Chatbot</button>
         </div>
         <div id="rightButtons">
-          <span id="greeting"> You're a winner winner chicken dinner, <strong>{{session['username']}}</strong>!</span>        <span> | </span>
-            <button id="logoutButton"  onclick="window.location.href='/login'"">Logout</button>
+          <span id="greeting"> You're a winner winner chicken dinner, <strong>{{ session['username'] }}</strong>!</span>
+          <span> | </span>
+          <button id="logoutButton" onclick="window.location.href='/login'">Logout</button>
         </div>
-      </nav>
+    </nav>
 
     <h1>Your Saved Recipes</h1>
     <!-- Display saved recipes -->
@@ -48,18 +48,65 @@
                 <strong>Instructions:</strong>
                 <p>
                     {% set instructions_lines = recipe[2].split('<br>') %}
-                    {% for line in instructions_lines[:-1] %} <!-- Exclude the last line -->
+                    {% for line in instructions_lines[:-1] %}
                         {{ line }}<br>
                     {% endfor %}
                 </p>
             </div>
-        </div>
-        
-        
+            <!-- Generate Image Button -->
+            <div class="recipe-card-footer">
+              <button class="generate-image-status-button" onclick="handleGenerateImageClick(this, '{{ recipe[0] }}', `{{ recipe[2] }}`)">
+                  Generate Image
+              </button>
+            </div>
+            <!-- Image Placeholder -->
+            <div class="generated-image" style="text-align: center; margin-top: 10px;"></div>
+          </div>
           {% endfor %}
       {% endif %}
-  </div>
-<script src="/static/js/saved_recipe.js"></script>
+    </div>
+    <script src="/static/js/saved_recipe.js"></script>
+    <script>
+        async function handleGenerateImageClick(button, title, instructions) {
+            try {
+                // Disable the button to prevent duplicate clicks
+                button.disabled = true;
+                button.textContent = "Generating...";
+
+                // Send a POST request to the /generate-image endpoint
+                const response = await fetch('/generate-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: title})
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.image_url) {
+                    // Create an img element for the generated image
+                    const imageContainer = button.parentElement.nextElementSibling;
+                    const img = document.createElement('img');
+                    img.src = data.image_url;
+                    img.alt = "Generated Recipe Image";
+                    img.style.maxWidth = "100%";
+                    img.style.marginTop = "10px";
+
+                    imageContainer.appendChild(img);
+
+                    // Remove the button after generating the image
+                    button.remove();
+                } else {
+                    button.disabled = false;
+                    button.textContent = "Generate Image";
+                    alert(data.message || "Failed to generate image.");
+                }
+            } catch (error) {
+                console.error("Error generating image:", error);
+                button.disabled = false;
+                button.textContent = "Generate Image";
+                alert("An error occurred while generating the image. Please try again.");
+            }
+        }
+    </script>
 </body>
 </html>
-
