@@ -111,8 +111,8 @@ def spicy_mode_route():
 # Route to save a recipe
 @app.route('/save-recipe', methods=['POST'])
 def save_recipe_route():
-    if session.get('step') != 'save_recipe':
-        return jsonify({"message": "You need to view the recipe suggestions first."}), 400
+    # if session.get('step') != 'save_recipe':
+    #     return jsonify({"message": "You need to view the recipe suggestions first."}), 400
 
     data = request.json
     save = data.get('save')
