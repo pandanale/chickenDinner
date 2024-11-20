@@ -184,15 +184,23 @@ def reset_image_generation():
 
 @app.route('/ask-question', methods=['POST'])
 def ask_question_route():
-    if session.get('step') != 'questions':
-        return jsonify({"message": "Please complete the previous steps first."}), 400
+    # Ensure 'suggestions' exists in the session
+    suggestions = session.get('suggestions')
+    if not suggestions:
+        return jsonify({"message": "No recipe context found to answer your question."}), 400
 
+    # Extract the question from the request
     data = request.json
     question = data.get('question')
 
-    suggestions = session.get('suggestions')
+    # Call the handle_recipe_questions function
     response = handle_recipe_questions(suggestions, question)
+
+    # Update the session step to 'questions' if not already set
+    session['step'] = 'questions'
+
     return jsonify({"response": response})
+
 
 @app.route('/delete-recipe', methods=['POST'])
 def delete_recipe():

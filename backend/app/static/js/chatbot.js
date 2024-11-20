@@ -377,26 +377,29 @@ function resetImageGeneration() {
     });
     iconContainer.appendChild(imageIcon);
 
-    // Updated logic for the question mark button
     const askQuestionButton = document.createElement("i");
     askQuestionButton.className = "fa-solid fa-question";
     askQuestionButton.style.cursor = "pointer";
     askQuestionButton.addEventListener("click", () => {
         const input = document.getElementById("userInput");
         const button = document.getElementById("submitButton");
-
+    
+        // Toggle input and button state
         if (input.disabled) {
-            // If input is disabled, enable it
             input.disabled = false;
             button.disabled = false;
             console.log("Search functionality enabled.");
         } else {
-            // If input is enabled, disable it
             input.disabled = true;
             button.disabled = true;
             console.log("Search functionality disabled.");
         }
+    
+        // Ensure the step is updated to 'questions'
+        sessionStorage.setItem("step", "questions");
+        console.log("Step set to 'questions'.");
     });
+    
     iconContainer.appendChild(askQuestionButton);
 
     // Add Question Button and Icons to Recipe Card
