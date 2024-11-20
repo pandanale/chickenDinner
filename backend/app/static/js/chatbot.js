@@ -403,6 +403,7 @@ function resetImageGeneration() {
     const heartIcon = document.createElement("i");
     heartIcon.className = "fa-regular fa-heart";
     heartIcon.style.cursor = "pointer";
+    heartIcon.setAttribute("data-tooltip", "Save this recipe!");
     heartIcon.addEventListener("click", () => {
         if (heartIcon.classList.contains("fa-regular")) {
             // Save the recipe and lock the heart
@@ -422,6 +423,7 @@ function resetImageGeneration() {
     const imageIcon = document.createElement("i");
     imageIcon.className = "fa-regular fa-image";
     imageIcon.style.cursor = "pointer";
+    imageIcon.setAttribute("data-tooltip", "Generate an Image");
     imageIcon.addEventListener("click", () => {
         console.log("Generate Image button clicked!");
         generateImage();
@@ -431,6 +433,7 @@ function resetImageGeneration() {
     const askQuestionButton = document.createElement("i");
     askQuestionButton.className = "fa-solid fa-question";
     askQuestionButton.style.cursor = "pointer";
+    askQuestionButton.setAttribute("data-tooltip", "Ask a question about the recipe");
     askQuestionButton.addEventListener("click", () => {
         const input = document.getElementById("userInput");
         const button = document.getElementById("submitButton");

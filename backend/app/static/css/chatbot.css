@@ -183,9 +183,32 @@ nav button:hover {
 
 /* Icon Styling */
 .icon-container i {
-    font-size: 24px; /* Adjust icon size */
-    color: #007bff; /* Adjust icon color */
+    font-size: 24px; /* Keep the original size */
+    color: #007bff; /* Original blue color */
     transition: transform 0.2s ease, color 0.2s ease;
+}
+.icon-container i::after {
+    content: attr(data-tooltip); /* Use the tooltip text from the data attribute */
+    position: absolute;
+    bottom: -30px; /* Position below the icon */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8); /* Dark background */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    white-space: nowrap;
+    opacity: 0; /* Start hidden */
+    pointer-events: none; /* Prevent hover on the tooltip itself */
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 10; /* Ensure it appears above other elements */
+}
+
+.icon-container i:hover::after {
+    opacity: 1; /* Show tooltip */
+    transform: translateX(-50%) translateY(-5px); /* Slight lift for effect */
 }
 
 .icon-container i:hover {
