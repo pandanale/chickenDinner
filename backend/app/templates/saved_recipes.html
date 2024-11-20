@@ -49,7 +49,7 @@
                 <p>
                     {% set instructions_lines = recipe[2].split('<br>') %}
                     {% for line in instructions_lines[:-1] %}
-                        {{ line }}<br>
+                        {{ line | safe}}<br>
                     {% endfor %}
                 </p>
             </div>

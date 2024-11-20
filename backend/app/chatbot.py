@@ -6,8 +6,7 @@ import requests
 
 # Set your OpenAI API key
 client = OpenAI(
-    api_key = ""
-)
+    api_key ="")
 
 # File to store authorized emails
 AUTH_EMAILS_FILE = "authorized_emails.txt"
@@ -146,12 +145,20 @@ def jsonify_content(recipe_text):
     title = get_title(recipe_text)
     title = title.replace('#', '')
 
+    # Extract and clean ingredients list
     ingredients_list = recipe_text.split("Ingredients:")[1].split("Instructions:")[0].strip().split('\n')
-    # ingredients_list = ingredients_list.replace('\n', '<br>')
+    if ingredients_list:
+        if ingredients_list[0] in ("*", "**"):
+            ingredients_list = ingredients_list[1:]
+        if ingredients_list[-1] in ("*", "**", "###", "####"):
+            ingredients_list = ingredients_list[:-1]
 
+    # Extract and format instructions
     instructions = recipe_text.split("Instructions:")[1].strip()
-    instructions = instructions.replace('\n', '<br>')
-    
+    # Replace `**step name**` with `<strong>step name</strong>`
+    instructions = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', instructions)
+    instructions = instructions.replace('\n', '<br>')  # Ensure line breaks are preserved
+
     return {
         "title": title,
         "ingredients": ingredients_list,
