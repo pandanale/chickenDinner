@@ -88,7 +88,6 @@ def initialize_user_database(email):
     return conn
 
 
-
 # Few-shot examples
 few_shot_examples = [
     {

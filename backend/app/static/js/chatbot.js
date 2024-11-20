@@ -354,14 +354,15 @@ function resetImageGeneration() {
     heartIcon.style.cursor = "pointer";
     heartIcon.addEventListener("click", () => {
         if (heartIcon.classList.contains("fa-regular")) {
+            // Save the recipe and lock the heart
             heartIcon.classList.remove("fa-regular");
             heartIcon.classList.add("fa-solid");
             console.log("Recipe saved!");
             saveRecipe();
-        } else {
-            heartIcon.classList.remove("fa-solid");
-            heartIcon.classList.add("fa-regular");
-            console.log("Recipe unsaved!");
+
+            // Disable further clicks by removing the event listener
+            heartIcon.style.pointerEvents = "none"; // Prevent further clicks
+            heartIcon.style.opacity = "0.6"; // Optional: visually indicate the button is disabled
         }
     });
     iconContainer.appendChild(heartIcon);
