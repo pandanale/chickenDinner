@@ -170,10 +170,14 @@ def make_it_special(recipe_dict, cuisine_type):
         prompt = [{"role": "user", "content": """Below is a JSON dictionary containing a recipe. Please take this recipe and make it spicy, and return
                 the spicy version of the recipe. Make sure the title starts with ###""" + str(recipe_dict)},
     *few_shot_examples]
-    else:
+    elif cuisine_type == "vegetarian":
         prompt = [{"role": "user", "content": """Below is a JSON dictionary containing a recipe. Please take this recipe and make it vegetarian, and return
                 the vegetarian version of the recipe. Make sure the title starts with ###""" + str(recipe_dict)},
     *few_shot_examples]
+    elif cuisine_type == "kosher":
+        prompt = [{"role": "user", "content": """Below is a JSON dictionary containing a recipe. Please take this recipe and make it kosher, and return
+                the kosher version of the recipe. Make sure the title starts with ###""" + str(recipe_dict)},
+    *few_shot_examples]           
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -186,8 +190,10 @@ def make_it_special(recipe_dict, cuisine_type):
     recipe = jsonify_content(recipe_text)
     if cuisine_type == "spicy":
         recipe['message'] = "Damnnn, you like it HOT! Here's what I came up with:"
-    else:
+    elif cuisine_type == "vegetarian":
         recipe['message'] = "Okay, I see you with that meatless magic! Here's what I came up with:"
+    elif cuisine_type == "kosher":
+        recipe['message'] = "Here's a Kosher recipe! Here's what I came up with:"
     return recipe
 
 def get_title(recipe_description):

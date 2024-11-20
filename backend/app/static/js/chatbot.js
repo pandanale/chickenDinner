@@ -8,9 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatbotButton = document.getElementById("chatbotButton")
   const pepperButton = document.getElementById('pepperButton');
   const vegButton = document.getElementById('vegButton');
+  const kosherButton = document.getElementById('kosherButton');
 
   var vegBeenClicked = false;
   var spicyBeenClicked = false;
+  var kosherBeenClicked = false;
+
 
   // Logout functionality
   logoutButton?.addEventListener("click", async function () {
@@ -51,6 +54,14 @@ document.addEventListener("DOMContentLoaded", function () {
     vegBeenClicked = true;
     vegButton.disabled = true;
     displayMessage("Captain Cooked", "Loading vegetarian 🥦 version of the recipe!");
+  });
+
+  kosherButton?.addEventListener("click", () => {
+    makeVegFall("kosher");
+    specialMode("kosher");
+    kosherBeenClicked = true;
+    kosherButton.disabled = true;
+    displayMessage("Captain Cooked", "Loading kosher 🔵 version of the recipe!");
   });
 
   startChat();
@@ -108,6 +119,10 @@ document.addEventListener("DOMContentLoaded", function () {
     else if (type === "vegetarian") {
       emoji1 = '🥦';
       emoji2 = '🥕';
+    }
+    else if (type === "kosher") {
+      emoji1 = '🔵';
+      emoji2 = '🔵';
     }
     const container = document.getElementById('pepperContainer');
     for (let i = 0; i < 20; i++) { // Adjust the number of peppers as needed
@@ -475,6 +490,9 @@ function resetImageGeneration() {
     }
     if (!spicyBeenClicked) {
       pepperButton.disabled = false;
+    }
+    if (!kosherBeenClicked) {
+      kosherButton.disabled = false;
     }
 }
 
