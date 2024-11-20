@@ -7,7 +7,6 @@ import requests
 # Set your OpenAI API key
 client = OpenAI(
     api_key = ""
-
 )
 
 # File to store authorized emails
@@ -135,7 +134,7 @@ def get_recipe_suggestions(ingredients, cuisine_type):
         model="gpt-4o-mini",
         messages=messages,
         temperature=0.7,
-        max_tokens=300,
+        max_tokens=2000,
     )
         # Extract the content
     recipe_text = response.choices[0].message.content
@@ -173,7 +172,7 @@ def make_it_special(recipe_dict, cuisine_type):
         model="gpt-4o-mini",
         messages=prompt,
         temperature=0.7,
-        max_tokens=1000,
+        max_tokens=2000,
     )
     recipe_text = response.choices[0].message.content
 
@@ -264,7 +263,7 @@ def handle_recipe_questions(recipe, question):
             model="gpt-4o-mini",
             messages=[{"role": "system", "content": "You are a helpful cooking assistant."},
                       {"role": "user", "content": prompt}],
-            max_tokens=150,
+            max_tokens=1000,
             temperature=0.7,
         )
         
