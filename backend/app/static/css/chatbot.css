@@ -107,6 +107,11 @@ nav button:hover {
     color: #666666; /* Dark gray text */
     cursor: not-allowed;
 }
+.message {
+    line-height: 1.5; /* Adjust to increase spacing within a single message */
+    margin-bottom: 15px; /* Space between consecutive messages */
+}
+
 
 .recipe-card {
     background-color: #e0f7fa;

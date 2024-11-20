@@ -76,7 +76,7 @@ def chatbot():
 @app.route('/start-chat', methods=['POST'])
 def start_chat():
     session['step'] = 'ingredients'
-    return jsonify({"message": "Welcome to the ScrappyAI! Tell me what ingredients you have and what type of dish you'd like to make."})
+    return jsonify({"message": "Do you want to be a winner winner chicken dinner? Tell me what ingredients you have and what type of dish you'd like to make."})
 
 @app.route('/get-recipe-suggestions', methods=['POST'])
 def get_recipe_suggestions_route():

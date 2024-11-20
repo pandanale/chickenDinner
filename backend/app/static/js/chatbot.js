@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
     specialMode("spicy");
     spicyBeenClicked = true;
     pepperButton.disabled = true;
-    displayMessage("Bot", "Loading SPICY🌶️ version of the recipe!");
+    displayMessage("Captain Cooked", "Loading SPICY🌶️ version of the recipe!");
   });
 
   vegButton?.addEventListener("click", () => {
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     specialMode("vegetarian");
     vegBeenClicked = true;
     vegButton.disabled = true;
-    displayMessage("Bot", "Loading vegetarian🥦 version of the recipe!");
+    displayMessage("Captain Cooked", "Loading vegetarian 🥦 version of the recipe!");
   });
 
   startChat();
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
           break;
         default:
           displayMessage(
-            "Bot",
+            "Captain Cooked",
             "I am not sure what step we are on. Let's start over."
           );
           await startChat();
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const data = await handleResponse(response);
     console.log(data)
     if (data) {
-      displayMessage("Bot", data.message);
+      displayMessage("Captain Cooked", data.message);
       displayRecipe(data.title, data.ingredients, data.instructions);
       console.log(data)
       initializeButton(data);
@@ -149,7 +149,7 @@ function toggleInput() {
     });
     const data = await handleResponse(response);
     if (data) {
-      displayMessage("Bot", data.message);
+      displayMessage("Captain Cooked", data.message);
       sessionStorage.setItem("step", "ingredients");
     }
   }
@@ -162,7 +162,7 @@ function toggleInput() {
     });
     const data = await handleResponse(response);
     if (data) {
-      displayMessage("Bot", data.message);
+      displayMessage("Captain Cooked", data.message);
       displayRecipe(data.title, data.ingredients, data.instructions);
       console.log(data)
       initializeButton(data);
@@ -254,13 +254,13 @@ async function deleteRecipe(recipeTitle) {
 async function generateImage() {
   try {
     if (isImageGenerating) {
-      displayMessage("Bot", "An image is already being generated. Please wait...");
+      displayMessage("Captain Cooked", "An image is already being generated. Please wait...");
       return;
     }
 
     // Set the flag to true to prevent multiple requests
     isImageGenerating = true;
-    displayMessage("Bot", "Image generating...");
+    displayMessage("Captain Cooked", "Image generating...");
 
     // Disable the "Generate Image" button (optional)
     const generateButton = document.querySelector('.generate-image-button');
@@ -276,7 +276,7 @@ async function generateImage() {
     // const data = await response.json();
 
     // // Display "Generating image..." message in the chat window
-    // displayMessage("Bot", data.message);
+    // displayMessage("Captain Cooked", data.message);
 
     // Step 2: Poll for the generated image
     await pollForGeneratedImage();
@@ -287,7 +287,7 @@ async function generateImage() {
 
   } catch (error) {
     console.error("Error generating image:", error);
-    displayMessage("Bot", "An error occurred while generating the image. Please try again.");
+    displayMessage("Captain Cooked", "An error occurred while generating the image. Please try again.");
     isImageGenerating = false; // Reset the flag in case of an error
     const generateButton = document.querySelector('.generate-image-button');
     if (generateButton) generateButton.disabled = false;
@@ -307,7 +307,7 @@ async function pollForGeneratedImage() {
     const data = await response.json();
 
     if (response.ok) {
-      displayMessage("Bot", data.message);
+      displayMessage("Captain Cooked", data.message);
       if (data.image_url) {
         displayMessage(
           "",
@@ -315,11 +315,11 @@ async function pollForGeneratedImage() {
         );
       }
     } else {
-      displayMessage("Bot", data.message);
+      displayMessage("Captain Cooked", data.message);
     }
   } catch (error) {
     console.error("Error polling for image:", error);
-    displayMessage("Bot", "An error occurred while retrieving the image.");
+    displayMessage("Captain Cooked", "An error occurred while retrieving the image.");
   }
 }
 
@@ -327,7 +327,7 @@ function resetImageGeneration() {
   isImageGenerating = false; // Reset the frontend flag
   const generateButton = document.querySelector('.generate-image-button');
   if (generateButton) generateButton.disabled = false;
-  displayMessage("Bot", "You can now generate a new image.");
+  displayMessage("Captain Cooked", "You can now generate a new image.");
 }
 
   async function askQuestion(message) {
@@ -339,7 +339,7 @@ function resetImageGeneration() {
     });
     const data = await handleResponse(response);
     if (data) {
-        displayMessage("Bot", data.response);
+        displayMessage("Captain Cooked", data.response);
     }
 }
 
@@ -348,7 +348,7 @@ function resetImageGeneration() {
       const data = await response.json();
       return data;
     } else {
-      displayMessage("Bot", "Sorry, something went wrong. Please try again.");
+      displayMessage("Captain Cooked", "Sorry, something went wrong. Please try again.");
       console.error("Error:", response.statusText);
       return null;
     }

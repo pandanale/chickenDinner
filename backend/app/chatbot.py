@@ -7,6 +7,7 @@ import requests
 # Set your OpenAI API key
 client = OpenAI(
     api_key = ""
+
 )
 
 # File to store authorized emails
