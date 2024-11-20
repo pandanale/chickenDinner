@@ -144,20 +144,20 @@ def saved_recipes():
     recipes = get_user_recipes(email)
     return render_template('saved_recipes.html', recipes=recipes)
 
-# @app.route('/generate-image', methods=['POST'])
-# def generate_image_route():
-#     data = request.json
-#     title = data.get('title')
+@app.route('/generate-image', methods=['POST'])
+def generate_image_route():
+    data = request.json
+    title = data.get('title')
 
-#     if not title:
-#         return jsonify({"message": "Missing title or instructions for image generation."}), 400
+    if not title:
+        return jsonify({"message": "Missing title or instructions for image generation."}), 400
 
-#     # Call the function to generate the image
-#     image_url = generate_recipe_image(title)
-#     if image_url:
-#         return jsonify({"message": "Image generated successfully!", "image_url": image_url})
-#     else:
-#         return jsonify({"message": "Failed to generate image."}), 500
+    # Call the function to generate the image
+    image_url = generate_recipe_image(title)
+    if image_url:
+        return jsonify({"message": "Image generated successfully!", "image_url": image_url})
+    else:
+        return jsonify({"message": "Failed to generate image."}), 500
 
 
 @app.route('/generate-image-result', methods=['GET'])
