@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const pepperButton = document.getElementById('pepperButton');
   const vegButton = document.getElementById('vegButton');
 
+  var vegBeenClicked = false;
+  var spicyBeenClicked = false;
+
   // Logout functionality
   logoutButton?.addEventListener("click", async function () {
     const response = await fetch("/api/logout", { method: "POST" });
@@ -37,12 +40,16 @@ document.addEventListener("DOMContentLoaded", function () {
   pepperButton?.addEventListener("click", () => {
     makeVegFall("spicy");
     specialMode("spicy");
+    spicyBeenClicked = true;
+    pepperButton.disabled = true;
     displayMessage("Bot", "Loading SPICY🌶️ version of the recipe!");
   });
 
   vegButton?.addEventListener("click", () => {
     makeVegFall("vegetarian");
     specialMode("vegetarian");
+    vegBeenClicked = true;
+    vegButton.disabled = true;
     displayMessage("Bot", "Loading vegetarian🥦 version of the recipe!");
   });
 
@@ -133,14 +140,6 @@ function toggleInput() {
 
     var button = document.getElementById("submitButton")
     button.disabled = !button.disabled;
-}
-
-function toggleSpecialButtons() {
-  var spicy = document.getElementById("vegButton");
-  spicy.disabled = false;
-
-  var veg = document.getElementById("pepperButton")
-  veg.disabled = false;
 }
 
   async function startChat() {
@@ -261,22 +260,23 @@ async function generateImage() {
 
     // Set the flag to true to prevent multiple requests
     isImageGenerating = true;
+    displayMessage("Bot", "Image generating...");
 
     // Disable the "Generate Image" button (optional)
     const generateButton = document.querySelector('.generate-image-button');
     if (generateButton) generateButton.disabled = true;
 
-    // Step 1: Send the initial request
-    const response = await fetch("/generate-image", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ generate: "yes" }),
-    });
+    // // Step 1: Send the initial request
+    // const response = await fetch("/generate-image", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ generate: "yes" }),
+    // });
 
-    const data = await response.json();
+    // const data = await response.json();
 
-    // Display "Generating image..." message in the chat window
-    displayMessage("Bot", data.message);
+    // // Display "Generating image..." message in the chat window
+    // displayMessage("Bot", data.message);
 
     // Step 2: Poll for the generated image
     await pollForGeneratedImage();
@@ -467,7 +467,12 @@ function resetImageGeneration() {
     button.disabled = true;
     console.log("Search functionality blurred out.");
 
-    toggleSpecialButtons();
+    if (!vegBeenClicked) {
+      vegButton.disabled = false;
+    }
+    if (!spicyBeenClicked) {
+      pepperButton.disabled = false;
+    }
 }
 
 });
