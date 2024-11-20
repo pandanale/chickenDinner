@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const homeButton = document.getElementById("homeButton");
   const savedRecipesButton = document.getElementById("savedRecipesButton");
   const chatbotButton = document.getElementById("chatbotButton")
-
-  document.getElementById('pepperButton').addEventListener('click', makePeppersFall);
+  const pepperButton = document.getElementById('pepperButton');
+  const vegButton = document.getElementById('vegButton');
 
   // Logout functionality
   logoutButton?.addEventListener("click", async function () {
@@ -32,6 +32,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   chatbotButton?.addEventListener("click", () => {
     window.location.href = "/chatbot";
+  });
+
+  pepperButton?.addEventListener("click", () => {
+    makeVegFall("spicy");
+    specialMode("spicy");
+    displayMessage("Bot", "Loading SPICY🌶️ version of the recipe!");
+  });
+
+  vegButton?.addEventListener("click", () => {
+    makeVegFall("vegetarian");
+    specialMode("vegetarian");
+    displayMessage("Bot", "Loading vegetarian🥦 version of the recipe!");
   });
 
   startChat();
@@ -62,13 +74,44 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  async function specialMode(type) {
+    const response = await fetch("/make-it-special", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cuisine_type: type }),
+    });
+    const data = await handleResponse(response);
+    console.log(data)
+    if (data) {
+      displayMessage("Bot", data.message);
+      displayRecipe(data.title, data.ingredients, data.instructions);
+      console.log(data)
+      initializeButton(data);
+      sessionStorage.setItem("step", "questions");
+    }
+  }
 
-  function makePeppersFall() {
+  function makeVegFall(type) {
+    var emoji1;
+    var emoji2;
+    if (type === "spicy") {
+      emoji1 = '🔥';
+      emoji2 = '🌶️';
+    }
+    else if (type === "vegetarian") {
+      emoji1 = '🥦';
+      emoji2 = '🥕';
+    }
     const container = document.getElementById('pepperContainer');
     for (let i = 0; i < 20; i++) { // Adjust the number of peppers as needed
         const pepper = document.createElement('span');
         pepper.className = 'pepper';
-        pepper.textContent = '🌶️';
+        if (i % 3 === 0) {
+          pepper.textContent = emoji1;
+        } else{
+          pepper.textContent = emoji2;
+        }
+        
         pepper.style.left = Math.random() * 100 + 'vw';
         pepper.style.animationDuration = (Math.random() * 2 + 3) + 's'; // Random duration between 3s and 5s
         pepper.style.fontSize = (Math.random() * 10 + 20) + 'px'; // Random font size between 20px and 30px
@@ -84,12 +127,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 }
 
-  function toggleInput() {
+function toggleInput() {
     var input = document.getElementById("userInput");
     input.disabled = !input.disabled;
 
     var button = document.getElementById("submitButton")
     button.disabled = !button.disabled;
+}
+
+function toggleSpecialButtons() {
+  var spicy = document.getElementById("vegButton");
+  spicy.disabled = false;
+
+  var veg = document.getElementById("pepperButton")
+  veg.disabled = false;
 }
 
   async function startChat() {
@@ -415,6 +466,8 @@ function resetImageGeneration() {
     input.disabled = true;
     button.disabled = true;
     console.log("Search functionality blurred out.");
+
+    toggleSpecialButtons();
 }
 
 });
