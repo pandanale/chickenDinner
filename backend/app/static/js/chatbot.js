@@ -6,8 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const homeButton = document.getElementById("homeButton");
   const savedRecipesButton = document.getElementById("savedRecipesButton");
   const chatbotButton = document.getElementById("chatbotButton")
-
-  document.getElementById('pepperButton').addEventListener('click', makePeppersFall);
+  const pepperButton = document.getElementById('pepperButton');
 
   // Logout functionality
   logoutButton?.addEventListener("click", async function () {
@@ -32,6 +31,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   chatbotButton?.addEventListener("click", () => {
     window.location.href = "/chatbot";
+  });
+
+  pepperButton?.addEventListener("click", () => {
+    makePeppersFall();
+    spicyMode();
   });
 
   startChat();
@@ -62,13 +66,33 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  async function spicyMode() {
+    const response = await fetch("/make-it-spicy", {
+      method: "POST"
+    });
+    const data = await handleResponse(response);
+    console.log(data)
+    if (data) {
+      displayMessage("Bot", data.message);
+      displayRecipe(data.title, data.ingredients, data.instructions);
+      console.log(data)
+      initializeButton(data);
+      sessionStorage.setItem("step", "questions");
+    }
+    toggleInput();
+  }
 
   function makePeppersFall() {
     const container = document.getElementById('pepperContainer');
-    for (let i = 0; i < 20; i++) { // Adjust the number of peppers as needed
+    for (let i = 0; i < 25; i++) { // Adjust the number of peppers as needed
         const pepper = document.createElement('span');
         pepper.className = 'pepper';
-        pepper.textContent = '🌶️';
+        if (i % 3 === 0) {
+          pepper.textContent = '🔥';
+        } else{
+          pepper.textContent = '🌶️';
+        }
+        
         pepper.style.left = Math.random() * 100 + 'vw';
         pepper.style.animationDuration = (Math.random() * 2 + 3) + 's'; // Random duration between 3s and 5s
         pepper.style.fontSize = (Math.random() * 10 + 20) + 'px'; // Random font size between 20px and 30px

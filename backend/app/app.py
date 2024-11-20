@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, session, render_template, redirect, url_for
 from flask_cors import CORS
-from chatbot import get_recipe_suggestions, handle_recipe_questions, generate_recipe_image
+from chatbot import get_recipe_suggestions, handle_recipe_questions, generate_recipe_image, make_it_spicy
 from database import save_recipe_to_db, get_user_recipes, delete_recipe_from_db
 import os
 
@@ -100,6 +100,13 @@ def get_recipe_suggestions_route():
         "instructions": suggestions['instructions']
     })
 
+@app.route('/make-it-spicy', methods=['POST'])
+def spicy_mode_route():
+    suggestions = session['suggestions']
+    spicy_recipe = make_it_spicy(suggestions)
+    print(jsonify(spicy_recipe))
+    print(type(jsonify(spicy_recipe)))
+    return jsonify(spicy_recipe)
 
 # Route to save a recipe
 @app.route('/save-recipe', methods=['POST'])

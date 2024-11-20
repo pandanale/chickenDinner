@@ -136,10 +136,12 @@ def get_recipe_suggestions(ingredients, cuisine_type):
         temperature=0.7,
         max_tokens=300,
     )
-    
-    # Extract the content
+        # Extract the content
     recipe_text = response.choices[0].message.content
+
+    return jsonify_content(recipe_text)
     
+def jsonify_content(recipe_text):
     # Parse the recipe text to extract structured data
     title = get_title(recipe_text)
     title = title.replace('#', '')
@@ -156,13 +158,27 @@ def get_recipe_suggestions(ingredients, cuisine_type):
         "instructions": instructions
     }
 
+def make_it_spicy(recipe_dict):
+    prompt = [{"role": "user", "content": """Below is a JSON dictionary containing a recipe. Please take this recipe and make it spicy, and return
+                the spicy version of the recipe. Make sure the title starts with ###""" + str(recipe_dict)},
+    *few_shot_examples]
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=prompt,
+        temperature=0.7,
+        max_tokens=1000,
+    )
+    recipe_text = response.choices[0].message.content
+
+    recipe = jsonify_content(recipe_text)
+    recipe['message'] = "Damnnn, you like it HOT! Here's what I came up with:"
+    return recipe
 
 def get_title(recipe_description):
     # Find the first line that starts with ###
     lines = recipe_description.split('\n')
     title = next((line for line in lines if line.startswith('###')), None)
     return title
-
 
 
 # Function to generate an image of the recipe
