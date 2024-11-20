@@ -376,17 +376,25 @@ function resetImageGeneration() {
     });
     iconContainer.appendChild(imageIcon);
 
-    // Question Button
-    // const askQuestionButton = document.createElement("button");
-    // askQuestionButton.textContent = "Ask a Question About the Recipe";
-    // askQuestionButton.classList.add("ask-question-button");
-    // askQuestionButton.style.marginTop = "10px";
+    // Updated logic for the question mark button
     const askQuestionButton = document.createElement("i");
     askQuestionButton.className = "fa-solid fa-question";
     askQuestionButton.style.cursor = "pointer";
     askQuestionButton.addEventListener("click", () => {
-        toggleInput();
-        sessionStorage.setItem("recipeContext", JSON.stringify({ title, ingredients, instructions }));
+        const input = document.getElementById("userInput");
+        const button = document.getElementById("submitButton");
+
+        if (input.disabled) {
+            // If input is disabled, enable it
+            input.disabled = false;
+            button.disabled = false;
+            console.log("Search functionality enabled.");
+        } else {
+            // If input is enabled, disable it
+            input.disabled = true;
+            button.disabled = true;
+            console.log("Search functionality disabled.");
+        }
     });
     iconContainer.appendChild(askQuestionButton);
 
@@ -396,6 +404,13 @@ function resetImageGeneration() {
     // Append Recipe Card to Chat Window
     chatWindow.appendChild(recipeCard);
     chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    // Blur out the search functionality
+    const input = document.getElementById("userInput");
+    const button = document.getElementById("submitButton");
+    input.disabled = true;
+    button.disabled = true;
+    console.log("Search functionality blurred out.");
 }
 
 });
