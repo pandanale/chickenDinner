@@ -8,7 +8,6 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 CORS(app)
 
-# Dummy user database (for demonstration purposes)
 users_db = {}
 
 # Route for home page
@@ -111,8 +110,6 @@ def spicy_mode_route():
 # Route to save a recipe
 @app.route('/save-recipe', methods=['POST'])
 def save_recipe_route():
-    # if session.get('step') != 'save_recipe':
-    #     return jsonify({"message": "You need to view the recipe suggestions first."}), 400
 
     data = request.json
     save = data.get('save')
@@ -152,7 +149,6 @@ def generate_image_route():
     if not title:
         return jsonify({"message": "Missing title or instructions for image generation."}), 400
 
-    # Call the function to generate the image
     image_url = generate_recipe_image(title)
     if image_url:
         return jsonify({"message": "Image generated successfully!", "image_url": image_url})
@@ -163,13 +159,11 @@ def generate_image_route():
 @app.route('/generate-image-result', methods=['GET'])
 def generate_image_result():
     try:
-        # Retrieve recipe suggestions from the session
         suggestions = session.get('suggestions')
 
         if not suggestions:
             return jsonify({"message": "No recipe suggestions found. Please start over."}), 400
 
-        # Generate the image
         image_url = generate_recipe_image(suggestions['title'])
         if image_url:
             session['image_generated'] = True  # Mark the image as generated
@@ -192,14 +186,11 @@ def ask_question_route():
     if not suggestions:
         return jsonify({"message": "No recipe context found to answer your question."}), 400
 
-    # Extract the question from the request
     data = request.json
     question = data.get('question')
 
-    # Call the handle_recipe_questions function
     response = handle_recipe_questions(suggestions, question)
 
-    # Update the session step to 'questions' if not already set
     session['step'] = 'questions'
 
     return jsonify({"response": response})
@@ -208,26 +199,17 @@ def ask_question_route():
 @app.route('/delete-recipe', methods=['POST'])
 def delete_recipe():
     try:
-        # Log incoming request data for debugging
-        print("Incoming request data:", request.json)
-        print("Session data:", dict(session))  # Debug session data
 
-        # Extract the recipe title from the request JSON
         data = request.json
-        recipe_title = data.get('title')  # Extract 'title' from request body
-        username = session.get('user_email')  # Get the user's email from the session
+        recipe_title = data.get('title')  
+        username = session.get('user_email')  # Getting the user's email from the session
 
-        # Log extracted values for debugging
-        print("Extracted recipe_title:", recipe_title)
-        print("Extracted username:", username)
 
-        # Validate the input parameters
         if not recipe_title:
             return jsonify({'success': False, 'message': 'Invalid request: Missing recipe title'}), 400
         if not username:
             return jsonify({'success': False, 'message': 'Invalid request: Missing user email'}), 400
 
-        # Perform the deletion using the database helper
         success = delete_recipe_from_db(username, recipe_title)
         if success:
             return jsonify({'success': True, 'message': f'Recipe "{recipe_title}" deleted successfully'})
@@ -245,7 +227,6 @@ def ask_question():
     if not recipe:
         return jsonify({"response": "No recipe context found to answer your question."})
 
-    # Process the question and recipe data here
     answer = handle_recipe_questions(question, recipe)
     return jsonify({"response": answer})
 
